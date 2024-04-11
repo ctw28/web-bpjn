@@ -16,15 +16,9 @@ class AkunRequest extends FormRequest
         $rules = [
             'user_id' => 'nullable',
             'name' => 'required|string',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ];
-
-        if ($this->isMethod('post')) {
-            $rules['email'] = 'required|email|unique:users';
-            $rules['password'] = 'required|min:8';
-        } elseif ($this->isMethod('put')) {
-            $rules['email'] = 'required|email';
-            $rules['password'] = 'nullable|min:8';
-        }
 
         return $rules;
     }
@@ -37,13 +31,5 @@ class AkunRequest extends FormRequest
             'email' => 'email akun',
             'password' => 'kata sandi',
         ];
-    }
-
-    // set nilai user_id
-    public function withValidator($validator)
-    {
-        $data['user_id'] = 1;
-        // $data['user_id'] = auth()->user()->id;
-        $this->merge($data);
     }
 }

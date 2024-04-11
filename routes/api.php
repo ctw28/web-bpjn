@@ -6,6 +6,7 @@ use App\Models\PengaturanWeb;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\GrupController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\JenisKontenController;
 use App\Http\Controllers\PengaturanWebController;
@@ -29,4 +30,7 @@ Route::resource('grup', GrupController::class);
 Route::resource('pengaturan-web', PengaturanWebController::class);
 Route::resource('akun', AkunController::class);
 Route::resource('atur-grup', AturGrupController::class);
+Route::resource('menu', MenuController::class);
 // });
+
+Route::get('load-menu-tree', [MenuController::class, 'getMenu']);

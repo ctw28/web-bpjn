@@ -22,8 +22,8 @@ class AturGrupRequest extends FormRequest
     public function attributes()
     {
         return [
-            'user_id' => 'akun id',
-            'grup_id' => 'grup id',
+            'user_id' => 'pengguna',
+            'grup_id' => 'grup',
         ];
     }
 }
