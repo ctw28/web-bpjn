@@ -16,8 +16,13 @@ class Konten extends Model
         //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
             $dt->slug = generateSlug($dt->judul, $dt->waktu);
-            $dt->user_id = 1;
+            $dt->user_id = getUserIdFromToken();
         });
+
+        // static::updating(function ($dt) {
+        //     $dt->user_id = getUserIdFromToken();
+        // });
+
     }
 
     public function user()

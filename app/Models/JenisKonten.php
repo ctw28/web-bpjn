@@ -15,8 +15,11 @@ class JenisKonten extends Model
         parent::boot();
         //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
-            // $dt->user_id = Auth::id();
-            $dt->user_id = 1;
+            $dt->user_id = getUserIdFromToken();
+        });
+
+        static::updating(function ($dt) {
+            $dt->user_id = getUserIdFromToken();
         });
     }
 

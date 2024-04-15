@@ -13,9 +13,12 @@ class Publikasi extends Model
     protected static function boot()
     {
         parent::boot();
-        //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
-            $dt->user_id = 1;
+            $dt->user_id = getUserIdFromToken();
+        });
+
+        static::updating(function ($dt) {
+            $dt->user_id = getUserIdFromToken();
         });
     }
 

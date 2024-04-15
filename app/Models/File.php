@@ -18,6 +18,10 @@ class File extends Model
             $dt->slug = generateSlug($dt->judul, $dt->waktu);
             $dt->user_id = getUserIdFromToken();
         });
+
+        // static::updating(function ($dt) {
+        //     $dt->user_id = getUserIdFromToken();
+        // });
     }
 
     public function user()

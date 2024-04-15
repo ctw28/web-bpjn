@@ -20,11 +20,12 @@ class Menu extends Model
             $maxUrut = Menu::where('menu_id', $menu_id)->max('urut');
             $dt->urut = $maxUrut + 1;
             // $menu->user_id = Auth::id();
-            $dt->user_id = 1;
+            $dt->user_id = getUserIdFromToken();
             $dt->menu_id = $menu_id;
         });
 
         static::updating(function ($dt) {
+            $dt->user_id = getUserIdFromToken();
             $menu_id = ($dt->menu_id > 0) ? $dt->menu_id : null;
             $dt->menu_id = $menu_id;
         });
