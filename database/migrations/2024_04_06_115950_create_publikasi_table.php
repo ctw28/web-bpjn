@@ -15,13 +15,15 @@ class CreatePublikasiTable extends Migration
     {
         Schema::create('publikasis', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_publikasi');
-            $table->text('catatan');
-            $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
-            $table->foreignId('konten_id')->nullable();
+            $table->boolean('is_publikasi')->nullable()->default(null);
+            $table->text('catatan')->nullable();
+            // $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
+            $table->foreignId('konten_id')->nullable()->unique();
             $table->foreign('konten_id')->references('id')->on('kontens')->restrictOnDelete();
-            $table->foreignId('file_id')->nullable();
+
+            $table->foreignId('file_id')->nullable()->unique();
             $table->foreign('file_id')->references('id')->on('files')->restrictOnDelete();
+
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();

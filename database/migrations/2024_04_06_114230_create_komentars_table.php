@@ -15,14 +15,13 @@ class CreateKomentarsTable extends Migration
     {
         Schema::create('komentars', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_publikasi');
+            $table->boolean('is_publikasi')->nullable()->default(null);
             $table->string('nama');
             $table->text('komentar');
-            $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
             $table->foreignId('konten_id')->nullable();
-            $table->foreign('konten_id')->references('id')->on('kontens')->restrictOnDelete();
+            $table->foreign('konten_id')->references('id')->on('kontens')->cascadeOnDelete();
             $table->foreignId('file_id')->nullable();
-            $table->foreign('file_id')->references('id')->on('files')->restrictOnDelete();
+            $table->foreign('file_id')->references('id')->on('files')->cascadeOnDelete();
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();

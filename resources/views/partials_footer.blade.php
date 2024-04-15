@@ -27,3 +27,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/loading.js') }}"></script>
 <script src="{{ asset('plugins/toastr/build/toastr.min.js') }}"></script>
+
+<script>
+//untuk logout dari token API Sanctum backend server
+function logoutApi() {
+    $.post('/api/logout', function(response) {
+        localStorage.removeItem('access_token');
+        logoutWeb();
+    }).fail(function(xhr) {
+        var errorMessage = "An error occurred while logging out from API: ";
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage += xhr.responseJSON.message;
+        } else {
+            errorMessage += "Unknown error.";
+        }
+        alert(errorMessage);
+    });
+}
+
+//untuk logout dari session web
+function logoutWeb() {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    $.ajax({
+        url: '/web-logout',
+        type: 'POST',
+        dataType: 'json',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        success: function(response) {
+            window.location.replace("{{ route('login') }}");
+        },
+        error: function(xhr) {
+            var errorMessage = "An error occurred while logging out from web session: ";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage += xhr.responseJSON.message;
+            } else {
+                errorMessage += "Unknown error.";
+            }
+            alert(errorMessage);
+        }
+    });
+}
+
+</script>

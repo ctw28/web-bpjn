@@ -8,6 +8,8 @@
 
     <h1>Jenis Konten Web</h1>
     <p>digunakan untuk mengatur jenis konten web, apakah termasuk artikel atau file yang akan digunakan pada website ini </p>
+    <hr>
+    <div class="font-12">double click pada data yang akan ingin diubah</div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -23,6 +25,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="table-responsive">
         <table class="table">

@@ -32,8 +32,8 @@
                             <label for="hp" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password">
                         </div>
-                        <button type="submit" class="btn btn-primary">Simpan Pegawai</button>
-                        <button class="btn btn-warning" id="tambahBaru">Form Baru</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-warning" onclick="batal(event)">Batal</button>
                     </form>
                 </div>
             </div>
@@ -180,21 +180,12 @@
         $('#name').focus();
     }
 
-    $('#tambahBaru').on('click', function(e) {
-        e.preventDefault();
-        let konfirmasi=false;
-        if($('#name').val()!=='' || $('#email').val()!==''){
-            konfirmasi=true;
-        }            
-        if(konfirmasi){
-            if(confirm('yakin isian form dikosongkan untuk tambah baru?')){
-                resetForm();
-            }
-        }else{
-            resetForm();
-        }
+    function batal(event) {
+        event.preventDefault();
+        resetForm();
         $('#name').focus();
-    });
+        $('#bodyAcr').collapse('hide'); 
+    }
 
     // Handle page change
     $(document).on('click', '.page-link', function() {
@@ -215,6 +206,11 @@
         } else if (search.length === 0) {
             loadData(1, '');
         }
+    })
+
+    $('.item-paging').on('click', function() {
+        vPaging=$(this).data('nilai');
+        loadData();
     })
 
     $("#form").validate({

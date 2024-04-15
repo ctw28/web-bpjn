@@ -29,17 +29,12 @@ class WebAppController extends Controller
         return response()->json($respon_data, 200);
     }
 
-    public function login()
-    {
-        return view('login');
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect()->route('login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
     public function session()
@@ -75,5 +70,35 @@ class WebAppController extends Controller
     public function menu()
     {
         return view('menu');
+    }
+
+    public function kontenWeb()
+    {
+        return view('konten_web');
+    }
+
+    public function fileWeb()
+    {
+        return view('file_web');
+    }
+
+    public function verifikasiKonten()
+    {
+        return view('verifikasi_konten');
+    }
+
+    public function verifikasiFile()
+    {
+        return view('verifikasi_file');
+    }
+
+    public function verifikasiKomentar()
+    {
+        return view('verifikasi_komentar');
+    }
+
+    public function login()
+    {
+        return view('auth');
     }
 }

@@ -2,6 +2,24 @@
 
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
+if (!function_exists('getUserIdFromToken')) {
+    function getUserIdFromToken()
+    {
+        try {
+            $user = Auth::guard('sanctum')->user();
+            if ($user) {
+                return $user->id;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+}
+
 
 if (!function_exists('anchor')) {
     function anchor($url, $text)
@@ -25,13 +43,41 @@ if (!function_exists('generateUniqueFileName')) {
 }
 
 if (!function_exists('uploadFile')) {
-    function uploadFile($request, $fileName = null)
+    function generateSlug($judul, $waktu)
+    {
+        $disallowed_chars = array(
+            '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '{', '}', '[', ']', '|', '\\', ';', ':', '"', '<', '>', ',', '.', '/', '?',
+            ' ', "'", ' '
+        );
+        $judul = str_replace(' ', '-', $judul);
+        $judul = str_replace($disallowed_chars, ' ', $judul);
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $judul));
+
+        $timestamp = strtotime($waktu);
+
+        $tgl = date('y', $timestamp) + date('j', $timestamp) + date('n', $timestamp) + date('w', $timestamp);
+        $waktu = date('H', $timestamp) + date('i', $timestamp);
+        // $tanggal = date('ymd', strtotime($waktu));
+        // $waktu = date('his', strtotime($waktu));
+        // $tanggal = date('ymd', strtotime($waktu));
+        // $waktu = date('his', strtotime($waktu));
+
+        $generateWaktu = ($tgl + $waktu + rand(1, 999)) . '-' . date('s', $timestamp);
+        // $finalSlug = date('ymd', $timestamp) . '-' . $slug . '-' . $generateWaktu;
+        $finalSlug = $slug . '-' . $generateWaktu;
+        return $finalSlug;
+    }
+}
+
+if (!function_exists('uploadFile')) {
+    function uploadFile($request, $storagePath = null, $fileName = null)
     {
         $uploadedFile = $request->file('file');
         $originalFileName = $uploadedFile->getClientOriginalName();
         $ukuranFile = $uploadedFile->getSize();
         $tipeFile = $uploadedFile->getMimeType();
-        $storagePath = 'uploads';
+        if (!$storagePath)
+            $storagePath = 'uploads/' . date('Y') . '/' . date('m');
 
         if (!File::isDirectory(public_path($storagePath))) {
             File::makeDirectory(public_path($storagePath), 0755, true);
@@ -48,5 +94,17 @@ if (!function_exists('uploadFile')) {
         chmod($fileFullPath, 0755);
         $path = $storagePath . '/' . $fileName;
         return $path;
+    }
+}
+
+if (!function_exists('ambilKata')) {
+    function ambilKata($text, $limit = 25)
+    {
+        $words = preg_split("/[\s,]+/", $text);
+        $shortenedText = implode(' ', array_slice($words, 0, $limit));
+        if (str_word_count($text) > $limit) {
+            $shortenedText .= '...';
+        }
+        return $shortenedText;
     }
 }

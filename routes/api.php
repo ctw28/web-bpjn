@@ -1,13 +1,17 @@
 <?php
 
-use App\Models\JenisKonten;
 use Illuminate\Http\Request;
-use App\Models\PengaturanWeb;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\GrupController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\KontenController;
 use App\Http\Controllers\AturGrupController;
+use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\PublikasiController;
+use App\Http\Controllers\ImageEditorController;
 use App\Http\Controllers\JenisKontenController;
 use App\Http\Controllers\PengaturanWebController;
 
@@ -22,15 +26,22 @@ use App\Http\Controllers\PengaturanWebController;
 |
 */
 
-Route::post('/login', [AuthController::class, 'index']);
+Route::post('/auth-cek', [AuthController::class, 'index']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/info-web', [PengaturanWebController::class, 'index']);
+Route::get('/load-menu-tree', [MenuController::class, 'getMenu']);
 
-// Route::middleware('auth:sanctum')->group(function () {
-Route::resource('jenis-konten', JenisKontenController::class);
-Route::resource('grup', GrupController::class);
-Route::resource('pengaturan-web', PengaturanWebController::class);
-Route::resource('akun', AkunController::class);
-Route::resource('atur-grup', AturGrupController::class);
-Route::resource('menu', MenuController::class);
-// });
 
-Route::get('load-menu-tree', [MenuController::class, 'getMenu']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/upload-image-editor', [ImageEditorController::class, 'upload']);
+    Route::resource('jenis-konten', JenisKontenController::class);
+    Route::resource('grup', GrupController::class);
+    Route::resource('pengaturan-web', PengaturanWebController::class);
+    Route::resource('akun', AkunController::class);
+    Route::resource('atur-grup', AturGrupController::class);
+    Route::resource('menu', MenuController::class);
+    Route::resource('konten', KontenController::class);
+    Route::resource('file', FileController::class);
+    Route::resource('publikasi', PublikasiController::class);
+    Route::resource('komentar', KomentarController::class);
+});

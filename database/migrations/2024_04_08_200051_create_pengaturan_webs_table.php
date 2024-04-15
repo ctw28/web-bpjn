@@ -17,6 +17,7 @@ class CreatePengaturanWebsTable extends Migration
             $table->id();
             $table->string('nama');
             $table->string('icon')->nullable();
+            $table->string('logo')->default('images/logo.png');
             $table->text('deskripsi');
             $table->string('keywords');
             $table->string('alamat')->nullable();
@@ -26,6 +27,9 @@ class CreatePengaturanWebsTable extends Migration
             $table->string('ig')->nullable();
             $table->string('email')->nullable();
             $table->string('twitter')->nullable();
+            $table->boolean('confirm_konten')->default(1);
+            $table->boolean('confirm_file')->default(1);
+            $table->boolean('confirm_komentar')->default(1);
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();

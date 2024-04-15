@@ -15,8 +15,9 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Halaman Depan Web</a>
+            <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Halaman Depan Web</a>
           </li>
+          @auth
           <li class="nav-item">
             <a class="nav-link" href="#">Dashboard</a>
           </li>
@@ -25,9 +26,8 @@
               Konten
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Daftar Artikel</a></li>
-              <li><a class="dropdown-item" href="#">Artikel Tunggal</a></li>
-              <li><a class="dropdown-item" href="#">File</a></li>
+              <li><a class="dropdown-item" href="{{ route('konten-web') }}">Artikel</a></li>
+              <li><a class="dropdown-item" href="{{ route('file-web') }}">File</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -35,8 +35,9 @@
               Administrator
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarAdmin">
-              <li><a class="dropdown-item" href="#">Verifikasi Konten</a></li>
-              <li><a class="dropdown-item" href="#">Verifikasi Komentar</a></li>
+              <li><a class="dropdown-item" href="{{ route('verifikasi-konten') }}">Verifikasi Konten</a></li>
+              <li><a class="dropdown-item" href="{{ route('verifikasi-file') }}">Verifikasi File</a></li>
+              <li><a class="dropdown-item" href="{{ route('verifikasi-komentar') }}">Verifikasi Komentar</a></li>
               <li><a class="dropdown-item" href="#">Kotak Saran</a></li>
               <li><a class="dropdown-item" href="{{ route('menu') }}">Menu</a></li>
               <hr class="dropdown-divider">
@@ -47,8 +48,9 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Keluar</a>
+            <a class="nav-link" href="javascript:;" onclick="logoutApi()">Keluar</a>
           </li>
+          @endauth
         </ul>
       </div>
     </div>

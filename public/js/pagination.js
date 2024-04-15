@@ -1,10 +1,12 @@
 var vPaging = 25;
 var vSelectPaging = [25,50,125,250,500];
 
-$.each(vSelectPaging, function(index, value) {
-    // var listItem = $('<li>').text(value);
-    var listItem = $('<li>').html(`<a class="dropdown-item item-paging" href="javascript:;" data-nilai="${value}">${value}  </a>`);
-    $('#list-select-paging').append(listItem);
+$(function(){
+    $.each(vSelectPaging, function(index, value) {
+        // var listItem = $('<li>').text(value);
+        var listItem = $('<li>').html(`<a class="dropdown-item item-paging" href="javascript:;" data-nilai="${value}">${value}  </a>`);
+        $('#list-select-paging').append(listItem);
+    });
 });
 
 function renderPagination(response, paginationElement) {

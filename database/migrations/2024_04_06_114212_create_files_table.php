@@ -18,9 +18,11 @@ class CreateFilesTable extends Migration
             $table->string('judul');
             $table->string('slug')->unique();
             $table->string('path');
-            $table->string('jenis_file'); //jpg pdf dll
-            $table->float('ukuran');
-            $table->integer('jumlah_akses');
+            $table->text('deskripsi')->nullable();
+            $table->dateTime('waktu');
+            $table->string('jenis_file')->nullable(); //jpg pdf dll
+            $table->float('ukuran')->nullable();
+            $table->integer('jumlah_akses')->default(0);
             $table->foreignId('jenis_konten_id');
             $table->foreign('jenis_konten_id')->references('id')->on('jenis_kontens')->restrictOnDelete();
             $table->foreignId('user_id');

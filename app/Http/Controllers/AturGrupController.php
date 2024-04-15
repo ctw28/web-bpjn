@@ -13,12 +13,12 @@ class AturGrupController extends Controller
     {
         $dataQuery = AturGrup::with(['grup', 'user'])->orderBy('grup_id', 'asc')->orderBy('user_id', 'asc');
 
-        if ($request->has('showall')) {
+        if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
             $startingNumber = 1;
         } else {
             $paging = 25;
-            if ($request->has('paging')) {
+            if ($request->filled('paging')) {
                 $paging = $request->paging;
             }
             $dataQuery = $dataQuery->paginate($paging);

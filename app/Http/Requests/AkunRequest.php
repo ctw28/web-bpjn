@@ -14,11 +14,18 @@ class AkunRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'user_id' => 'nullable',
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users,email',
+            'email' => 'required|string|email',
             'password' => 'required|string|min:8',
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['email'] .= '|unique:users,email';
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $rules['password'] = 'nullable|string|min:8';
+        }
 
         return $rules;
     }
@@ -26,7 +33,6 @@ class AkunRequest extends FormRequest
     public function attributes()
     {
         return [
-            'user_id' => 'akun penginput',
             'name' => 'nama akun',
             'email' => 'email akun',
             'password' => 'kata sandi',

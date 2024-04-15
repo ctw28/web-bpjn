@@ -11,16 +11,16 @@ class GrupController extends Controller
     public function index(Request $request)
     {
         $dataQuery = Grup::with('user')->orderBy('nama', 'asc');
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $dataQuery->where('nama', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('showall')) {
+        if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
             $startingNumber = 1;
         } else {
             $paging = 25;
-            if ($request->has('paging')) {
+            if ($request->filled('paging')) {
                 $paging = $request->paging;
             }
             $dataQuery = $dataQuery->paginate($paging);

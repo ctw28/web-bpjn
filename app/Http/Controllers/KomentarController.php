@@ -4,82 +4,82 @@ namespace App\Http\Controllers;
 
 use App\Models\Komentar;
 use Illuminate\Http\Request;
+use App\Http\Requests\KomentarRequest;
 
 class KomentarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $dataQuery = Komentar::with(['konten', 'user', 'file'])->orderBy('created_at', 'desc');
+        if ($request->filled('publikasi')) {
+            $publikasiValue = $request->publikasi;
+            if ($publikasiValue == 1) {
+                $dataQuery->where('is_publikasi', 1);
+            } elseif ($publikasiValue == 0) {
+                $dataQuery->where('is_publikasi', 0);
+            } elseif ($publikasiValue == 2) {
+                $dataQuery->whereNull('is_publikasi');
+            }
+        }
+
+        if ($request->filled('showall')) {
+            $dataQuery = $dataQuery->get();
+            $startingNumber = 1;
+        } else {
+            $paging = 25;
+            if ($request->filled('paging')) {
+                $paging = $request->paging;
+            }
+            $dataQuery = $dataQuery->paginate($paging);
+            $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
+        }
+
+        $dataQuery->transform(function ($item) use (&$startingNumber) {
+            $item->setAttribute('nomor', $startingNumber++);
+            $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
+            return $item;
+        });
+
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(KomentarRequest $request)
     {
-        //
+        $dataSave = Komentar::create($request->all());
+        $dataQuery = Komentar::where('id', $dataSave->id)->first();
+        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+        return response()->json($dataQuery, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $dataQuery = Komentar::with(['konten', 'user', 'file'])->find($id);
+        if (!$dataQuery) {
+            return response()->json(['message' => 'data tidak ditemukan'], 404);
+        }
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Komentar  $komentar
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Komentar $komentar)
+    public function update(KomentarRequest $request, $id)
     {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+
+        $dataQuery->update($request->all());
+        return response()->json($dataQuery, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Komentar  $komentar
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Komentar $komentar)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Komentar  $komentar
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Komentar $komentar)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Komentar  $komentar
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Komentar $komentar)
-    {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataQuery->delete();
+        return response()->json(null, 204);
     }
 }

@@ -8,6 +8,8 @@
 
     <h1>Grup Pengguna</h1>
     <p>digunakan untuk mengatur jenis grup akun yang dapat login pada website ini </p>
+    <hr>
+    <div class="font-12">double click pada data yang akan ingin diubah</div>
 
     <div class="row">
         <div class="col-sm-12">

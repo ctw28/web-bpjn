@@ -12,12 +12,12 @@ class PengaturanWebController extends Controller
     {
         $dataQuery = PengaturanWeb::with('user')->orderBy('id', 'asc');
 
-        if ($request->has('showall')) {
+        if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
             $startingNumber = 1;
         } else {
             $paging = 25;
-            if ($request->has('paging')) {
+            if ($request->filled('paging')) {
                 $paging = $request->paging;
             }
             $dataQuery = $dataQuery->paginate($paging);
@@ -35,6 +35,14 @@ class PengaturanWebController extends Controller
 
     public function store(PengaturanWebRequest $request)
     {
+        if ($request->hasFile('file')) {
+            $iconPath = uploadFile($request, null, 'favicon');
+            if ($iconPath) {
+                $request['icon'] = $iconPath;
+            } else {
+                return response()->json(['message' => 'Gagal mengunggah ikon'], 500);
+            }
+        }
         $dataSave = PengaturanWeb::create($request->all());
         $dataQuery = PengaturanWeb::with('user')
             ->where('id', $dataSave->id)

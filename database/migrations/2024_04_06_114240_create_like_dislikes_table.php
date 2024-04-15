@@ -17,11 +17,11 @@ class CreateLikeDislikesTable extends Migration
             $table->id();
             $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
             $table->foreignId('konten_id')->nullable();
-            $table->foreign('konten_id')->references('id')->on('kontens')->restrictOnDelete();
+            $table->foreign('konten_id')->references('id')->on('kontens')->cascadeOnDelete();
             $table->foreignId('file_id')->nullable();
-            $table->foreign('file_id')->references('id')->on('files')->restrictOnDelete();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
+            $table->foreign('file_id')->references('id')->on('files')->cascadeOnDelete();
+            // $table->foreignId('user_id');
+            // $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();
         });
     }

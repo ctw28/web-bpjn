@@ -15,8 +15,8 @@ class File extends Model
         parent::boot();
         //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
-            // $menu->user_id = Auth::id();
-            $dt->user_id = 1;
+            $dt->slug = generateSlug($dt->judul, $dt->waktu);
+            $dt->user_id = getUserIdFromToken();
         });
     }
 
@@ -32,11 +32,16 @@ class File extends Model
 
     public function publikasi()
     {
-        return $this->hasMany(Publikasi::class);
+        return $this->hasOne(Publikasi::class);
     }
 
     public function likedislike()
     {
         return $this->hasMany(LikeDislike::class);
+    }
+
+    public function jenisKonten()
+    {
+        return $this->belongsTo(JenisKonten::class);
     }
 }

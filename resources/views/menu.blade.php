@@ -1,7 +1,7 @@
 @extends('template')
 
 @section('head')
-    <title>Jenis Konten</title>
+    <title>Menu Web</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="{{ asset('plugins/select2-to-tree/src/select2totree.css') }}" rel="stylesheet" />
     <style>
@@ -14,10 +14,6 @@
             font-weight: 400;
             line-height: 1.5;
         }
-        .font-12{
-            font-size:12px;
-        }
-
     </style>
 @endsection
 
@@ -25,10 +21,12 @@
 
     <h1>Menu Web</h1>
     <p>digunakan untuk mengatur menu pada tampilan utama website ini </p>
+    <hr>
 
     <form id="form" class="row">
         <input type="hidden" name="id" id="id">
-        <div class="col-sm-10">
+        <input type="hidden" name="urut" id="urut">
+        <div class="col-sm-9">
           <div class="row">
                 <div class="col-sm-4 mb-2">
                     <input type="text" name="nama" id="nama" class="form-control w-100" placeholder="nama menu" aria-label="menu" required>
@@ -42,13 +40,17 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="input-group justify-content-end">
-                <button type="submit" class="btn btn-outline-secondary" id="simpan">Simpan</button>
-                <button type="button" class="btn btn-outline-secondary" id="refresh">Refresh</button>
+                <button type="submit" class="btn btn-sm btn-outline-secondary" id="simpan">Simpan</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetForm()">Batal</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refresh()">Refresh</button>
             </div>
         </div>
     </form>
+
+    <div class="font-12">double click pada data yang akan ingin diubah</div>
+
     <div id="data-list"></div>
 
 @endsection
@@ -67,13 +69,14 @@
     function resetForm(){
         $('#form input').val('');
         $('#form')[0].reset();
+        $('#menu_id').val(0).trigger('change');
     }    
 
     function buildMenuTree(data, parentId) {
         var result = "<ul>";
         for (var i = 0; i < data.length; i++) {
             if (data[i].menu_id == parentId) {
-                result += `<li>${data[i].nama} <span class="font-12">${data[i].url}</span> <button type="button" class="btn btn-vsm btn-danger" onclick="hapusData(${data[i].id})">x</button>`;
+                result += `<li ondblclick="ganti(${data[i].id},event)" data-urut="${data[i].urut}">${data[i].nama} <span class="font-12">${data[i].url}</span> <button type="button" class="btn btn-vsm btn-danger" onclick="hapusData(${data[i].id})">x</button>`;
                 result += buildMenuTree(data, data[i].id);
                 result += "</li>";
             }
@@ -106,9 +109,38 @@
                 dataList.empty();
                 var menuTree = buildMenuTree(response, null);
                 $(dataList).html(menuTree);
+            },
+            error: function() {
+                alert('operasi gagal dilakukan!');
             }
         });
     }
+
+    function refresh() {
+        loadTreeMenu();
+        loadData();
+        resetForm();
+    };
+
+    function ganti(id,event) {
+        event.stopPropagation();
+        var menu_id = 0;
+        $.ajax({
+            url: vApiUrl+'/' + id,
+            method: 'GET',
+            success: function(response) {
+                menu_id = (response.menu_id>0)?response.menu_id:0;
+                $('#id').val(response.id);
+                $('#urut').val(response.urut);
+                $('#nama').val(response.nama);
+                $('#url').val(response.url);
+                $('#menu_id').val(menu_id).trigger('change');
+            },
+            error: function() {
+                alert('operasi gagal dilakukan!');
+            }
+        });
+    }    
 
     $("#form").validate({
         submitHandler: function(form) {
