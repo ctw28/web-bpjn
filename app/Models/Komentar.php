@@ -10,6 +10,17 @@ class Komentar extends Model
     use HasFactory;
     protected $guarded = ["id"];
 
+    public function setIsPublikasiAttribute($value)
+    {
+        if (auth()->check()) {
+            if (!is_admin(auth()->id())) {
+                // throw new \Exception("tidak bisa mengubah kolom 'is_publikasi', khusus admin.");
+                abort(response()->json(['message' => "Tidak bisa mengubah kolom 'is_publikasi', khusus admin."], 403));
+            }
+        }
+        $this->attributes['is_publikasi'] = $value;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

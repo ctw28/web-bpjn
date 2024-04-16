@@ -16,7 +16,8 @@ class File extends Model
         //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
             $dt->slug = generateSlug($dt->judul, $dt->waktu);
-            $dt->user_id = getUserIdFromToken();
+            $user_id = auth()->check() ? auth()->id() : 1;
+            $dt->user_id = $user_id;
         });
 
         // static::updating(function ($dt) {

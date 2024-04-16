@@ -101,4 +101,9 @@ class WebAppController extends Controller
     {
         return view('auth');
     }
+
+    public function web()
+    {
+        return view('website');
+    }
 }

@@ -1,4 +1,4 @@
-@extends('template')
+@extends('template_dashboard')
 
 @section('head')
     <title>File Website</title>
@@ -125,7 +125,7 @@
 
         function loadJenisKonten(){
             $.ajax({
-                url: 'api/jenis-konten?showall=true&kategori=file',
+                url: 'api/get-jenis-konten?showall=true&kategori=file',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {

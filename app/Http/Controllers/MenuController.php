@@ -15,7 +15,8 @@ class MenuController extends Controller
         foreach ($menus as $menu) {
             $item = [
                 'id' => $menu->id,
-                'text' => $menu->nama
+                'text' => $menu->nama,
+                'url' => $menu->url,
             ];
             $submenus = $this->loadMenu($menu->id);
             if (!empty($submenus)) {

@@ -14,9 +14,9 @@ use App\Http\Controllers\WebAppController;
 |
 */
 
-Route::get('/', [WebAppController::class, 'login']); // sementara menunggu halaman depan selesai
+Route::get('/', [WebAppController::class, 'web'])->name('web'); // sementara menunggu halaman depan selesai
 
-Route::get('/login', [WebAppController::class, 'login'])->name('login');
+Route::get('/login', [WebAppController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/set-session', [WebAppController::class, 'setSession'])->name('setSession')->middleware('guest');
 Route::get('/session', [WebAppController::class, 'session'])->name('session');
 

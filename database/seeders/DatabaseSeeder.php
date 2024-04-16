@@ -44,16 +44,17 @@ class DatabaseSeeder extends Seeder
 
         //untuk jenis konten
         $dtdef = [
-            ['user_id' => 1, 'nama' => 'Profil', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Profil website'],
-            ['user_id' => 1, 'nama' => 'Berita', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Daftar berita website'],
-            ['user_id' => 1, 'nama' => 'Peraturan', 'kategori' => 'FILE', 'deskripsi' => 'Daftar peraturan pada website'],
-            ['user_id' => 1, 'nama' => 'Download', 'kategori' => 'FILE', 'deskripsi' => 'Daftar download pada website'],
+            ['user_id' => 1, 'nama' => 'Profil', 'slug' => 'profil', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Profil website'],
+            ['user_id' => 1, 'nama' => 'Berita', 'slug' => 'berita', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Daftar berita website'],
+            ['user_id' => 1, 'nama' => 'Peraturan', 'slug' => 'peraturan', 'kategori' => 'FILE', 'deskripsi' => 'Daftar peraturan pada website'],
+            ['user_id' => 1, 'nama' => 'Download', 'slug' => 'download', 'kategori' => 'FILE', 'deskripsi' => 'Daftar download pada website'],
         ];
 
         foreach ($dtdef as $dt) {
             JenisKonten::create([
                 'user_id' => $dt['user_id'],
                 'nama' => $dt['nama'],
+                'slug' => $dt['slug'],
                 'kategori' => $dt['kategori'],
                 'deskripsi' => $dt['deskripsi'],
             ]);
@@ -61,9 +62,10 @@ class DatabaseSeeder extends Seeder
 
         //untuk menu
         $dtdef = [
-            ['user_id' => 1, 'urut' => 1, 'nama' => 'Dashboard', 'url' => '/dashboard'],
+            ['user_id' => 1, 'urut' => 1, 'nama' => 'Halaman Depan', 'url' => '/'],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Profil', 'url' => 'javascript:;'],
-            ['user_id' => 1, 'urut' => 1, 'nama' => 'Publikasi', 'url' => 'javascript:;'],
+            ['user_id' => 1, 'urut' => 3, 'nama' => 'Publikasi', 'url' => 'javascript:;'],
+            ['user_id' => 1, 'urut' => 4, 'nama' => 'Login', 'url' => '/login'],
 
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => '/visimisi', 'menu_id' => 2],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => '/sejarah', 'menu_id' => 2],

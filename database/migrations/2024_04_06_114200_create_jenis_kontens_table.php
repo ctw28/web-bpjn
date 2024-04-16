@@ -16,6 +16,7 @@ class CreateJenisKontensTable extends Migration
         Schema::create('jenis_kontens', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('slug')->unique();
             $table->text('deskripsi');
             $table->enum('kategori', ['ARTIKEL', 'FILE'])->default('ARTIKEL');
             $table->foreignId('user_id');

@@ -27,21 +27,27 @@ use App\Http\Controllers\PengaturanWebController;
 */
 
 Route::post('/auth-cek', [AuthController::class, 'index']);
-Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/info-web', [PengaturanWebController::class, 'index']);
 Route::get('/load-menu-tree', [MenuController::class, 'getMenu']);
+Route::get('/daftar', [KontenController::class, 'index']);
+Route::get('/get-jenis-konten', [JenisKontenController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     Route::post('/upload-image-editor', [ImageEditorController::class, 'upload']);
-    Route::resource('jenis-konten', JenisKontenController::class);
-    Route::resource('grup', GrupController::class);
-    Route::resource('pengaturan-web', PengaturanWebController::class);
-    Route::resource('akun', AkunController::class);
-    Route::resource('atur-grup', AturGrupController::class);
-    Route::resource('menu', MenuController::class);
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
-    Route::resource('publikasi', PublikasiController::class);
     Route::resource('komentar', KomentarController::class);
+
+    Route::middleware(['is.admin'])->group(function () {
+        Route::resource('menu', MenuController::class);
+        Route::resource('publikasi', PublikasiController::class);
+        Route::resource('jenis-konten', JenisKontenController::class);
+        Route::resource('grup', GrupController::class);
+        Route::resource('pengaturan-web', PengaturanWebController::class);
+        Route::resource('akun', AkunController::class);
+        Route::resource('atur-grup', AturGrupController::class);
+    });
 });

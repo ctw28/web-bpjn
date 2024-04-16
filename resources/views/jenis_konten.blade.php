@@ -1,4 +1,4 @@
-@extends('template')
+@extends('template_dashboard')
 
 @section('head')
     <title>Jenis Konten</title>
@@ -33,6 +33,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Jenis Konten</th>
+                    <th scope="col">Slug</th>
                     <th scope="col">Kategori</th>
                     <th scope="col">Deskripsi</th>
                     <th scope="col">User</th>
@@ -65,6 +66,7 @@
             <tr data-id="">
                 <td></td>
                 <td><input type="text" class="form-control" name="nama[]"></td>
+                <td><input type="text" class="form-control" name="slug[]"></td>
                 <td>
                     <select class="form-control" name="kategori[]">
                         <option value='ARTIKEL'>Artikel</option>
@@ -102,6 +104,7 @@
         var baris = $(button).closest('tr');
         var postData = {
             nama: baris.find("input[name='nama[]']").val(),
+            slug: baris.find("input[name='slug[]']").val(),
             kategori: baris.find("select[name='kategori[]']").val(),
             deskripsi: baris.find("textarea[name='deskripsi[]']").val()
         };
@@ -115,18 +118,19 @@
                 toastr.success('operasi berhasil dilakukan!', 'berhasil');
                 baris.attr("data-id", response.id); 
                 baris.find("td:eq(1)").text(response.nama); 
-                baris.find("td:eq(2)").text(response.kategori); 
-                baris.find("td:eq(3)").text(response.deskripsi); 
-                baris.find("td:eq(4)").text(response.user.name); 
-                baris.find("td:eq(5)").text(response.updated_at_format);
-                baris.find("td:eq(6)").html(`<div class="btn-group btn-group-sm" role="group">
+                baris.find("td:eq(2)").text(response.slug); 
+                baris.find("td:eq(3)").text(response.kategori); 
+                baris.find("td:eq(4)").text(response.deskripsi); 
+                baris.find("td:eq(5)").text(response.user.name); 
+                baris.find("td:eq(6)").text(response.updated_at_format);
+                baris.find("td:eq(7)").html(`<div class="btn-group btn-group-sm" role="group">
                                                 <button type="button" class="btn btn-danger" onclick="hapusData(${response.id})">Hapus</button>
                                             </div>`);
 
 
 
                 //---------------- sembunyikan inputan -------------------
-                baris.find("input[name='nama[]'], select[name='kategori[]'], textarea[name='deskripsi[]'], .simpan-baris, .batal-baris").hide();
+                baris.find("input[name='nama[]'], input[name='slug[]'], select[name='kategori[]'], textarea[name='deskripsi[]'], .simpan-baris, .batal-baris").hide();
             },
             error: function() {
                 alert('operasi gagal dilakukan!');
@@ -150,9 +154,12 @@
                         $cell.html('<input type="text" class="form-control" value="' + content + '">');
                         break;
                     case 2:
-                        $cell.html('<select class="form-control"><option value="ARTIKEL">Artikel</option><option value="FILE">File</option></select>');
+                        $cell.html('<input type="text" class="form-control" value="' + content + '">');
                         break;
                     case 3:
+                        $cell.html('<select class="form-control"><option value="ARTIKEL">Artikel</option><option value="FILE">File</option></select>');
+                        break;
+                    case 4:
                         $cell.html('<textarea class="form-control">' + content + '</textarea>');
                         break;
                     default:
@@ -171,8 +178,9 @@
         if(id!==''){
             $(this).closest('td').html(newValue);
             var nama = $(tr).find('td:nth-child(2)').text();
-            var kategori = $(tr).find('td:nth-child(3)').text();
-            var deskripsi = $(tr).find('td:nth-child(4)').text();    
+            var slug = $(tr).find('td:nth-child(3)').text();
+            var kategori = $(tr).find('td:nth-child(4)').text();
+            var deskripsi = $(tr).find('td:nth-child(5)').text();    
 
             // console.log('old : '+oldValue+' ,new : '+newValue);
             if(oldValue!==newValue)
@@ -181,6 +189,7 @@
                     type: 'PUT',
                     data: {
                         nama:nama,
+                        slug:slug,
                         kategori:kategori,
                         deskripsi:deskripsi,
                     },
@@ -217,6 +226,7 @@
                     dataList.append(`<tr data-id="${dt.id}"> 
                             <td>${dt.nomor}</td> 
                             <td>${dt.nama}</td> 
+                            <td>${dt.slug}</td> 
                             <td>${dt.kategori}</td> 
                             <td>${dt.deskripsi}</td> 
                             <td>${dt.user.name}</td> 

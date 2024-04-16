@@ -15,6 +15,7 @@ class JenisKontenRequest extends FormRequest
     {
         return [
             'nama' => 'required|string',
+            'slug' => 'required|string',
             'deskripsi' => 'nullable',
             'kategori' => 'required|string',
         ];
@@ -24,6 +25,7 @@ class JenisKontenRequest extends FormRequest
     {
         return [
             'nama' => 'nama jenis konten',
+            'slug' => 'slug jenis konten',
             'deskripsi' => 'deskripsi ',
             'kategori' => 'kategori KONTEN atau FILE',
         ];

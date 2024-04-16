@@ -1,4 +1,4 @@
-@extends('template')
+@extends('template_dashboard')
 
 @section('head')
     <title>Grup Pengguna</title>

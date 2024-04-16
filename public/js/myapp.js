@@ -38,6 +38,8 @@ function sesuaikanPengaturan(){
     $('link[rel="shortcut icon"]').attr('href', icon);
     $('link[rel="icon"]').attr('href', icon);
     $('#logo-web').attr('src', logo);    
+    $('#nama-web').html(pengaturanWeb.nama);    
+    
 }
 
 function getPengaturanWeb() {
