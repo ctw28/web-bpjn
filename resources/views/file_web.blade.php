@@ -1,23 +1,12 @@
 @extends('template_website')
 
 @section('head')
-    <title>File Web</title>
+    <title>File {{ $kategori }}</title>
 @endsection
 
 @section('container')
 
-    <h1>File Web {{ $kategori }}</h1>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary btnRefresh" id="refresh">Refresh</button>
-                <ul class="dropdown-menu dropdown-menu-end" id="list-select-paging">
-                </ul>
-
-            </div>
-        </div>
-    </div>
+    <h1>File {{ $kategori }}</h1>
 
     <div class="table-responsive">
         <table class="table">
@@ -25,6 +14,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">File Dokumen Web</th>
+                    <th scope="col">Akun</th>
                     <th scope="col">Statistik</th>
                     <th scope="col">Waktu</th>
                 </tr>
@@ -89,21 +79,7 @@ $(document).ready(function() {
 
                 $.each(response.data, function(index, dt) {
                     var hakakses='';
-                        
-                        // console.log(dt.aturgrup);
-                        var publikasi='<span class="badge text-bg-warning">Belum diperiksa</span>';
-                        var btnAksi=`<div class="btn-group btn-group-sm" role="group">
-                                        <button type="button" class="btn btn-primary btnGanti" data-id="${dt.id}" >Ganti</button>
-                                        <button type="button" class="btn btn-danger btnHapus" data-id="${dt.id}" >Hapus</button>
-                                    </div>`;
-                        if(dt.publikasi){
-                            // $waktu=myFormatDate(date)
-                            publikasi=(dt.publikasi.is_publikasi)?`<span class="badge text-bg-success">Terpublikasi</span>`:`<span class="badge text-bg-danger">Ditolak</span>`;
-                            publikasi+=`<div class="font-12">${myLabel(dt.publikasi.catatan)}</div><div class="font-12"><i class="bi bi-calendar-event"></i> ${myFormatDate(dt.publikasi.user.created_at)}</div>`;
-                            publikasi+=`<div><i>${dt.publikasi.user.name}</i></div>`;
-                            btnAksi='';
-                        }
-                        
+                                                
                         dataList.append(`
                             <tr data-id="${dt.id}"> 
                                 <td>${dt.nomor}</td> 
@@ -121,8 +97,7 @@ $(document).ready(function() {
                                         <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
                                     </span>
                                 </td> 
-                                <td>${dt.updated_at_format}</td> 
-                                <td>${btnAksi}</td>
+                                <td>${dt.waktu}</td> 
                             </tr>`);
                     });
 

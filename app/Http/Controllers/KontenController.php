@@ -13,6 +13,7 @@ class KontenController extends Controller
     public function index(Request $request)
     {
         $dataQuery = Konten::with(['jeniskonten', 'user', 'komentar', 'likedislike', 'publikasi.user'])->orderBy('updated_at', 'desc');
+
         if (!$request->filled('is_web')) {
             if (!is_admin(auth()->id()))
                 $dataQuery->where('user_id', auth()->id());
@@ -20,12 +21,13 @@ class KontenController extends Controller
 
         if ($request->filled('search')) {
             $dataQuery->where('judul', 'like', '%' . $request->search . '%')
-                ->orWhere('slug', 'like', '%' . $request->search . '%');
+                ->orWhere('slug', 'like', '%' . $request->search . '%'); //slug pada konten
         }
 
         if ($request->filled('jenis')) {
             $jenis = $request->jenis;
             $dataQuery->whereHas('jeniskonten', function ($q) use ($jenis) {
+                //slug pada jenis konten
                 $q->where('slug', $jenis);
             });
         }
@@ -43,6 +45,10 @@ class KontenController extends Controller
             } elseif ($publikasiValue == 2) {
                 $dataQuery->whereDoesntHave('publikasi');
             }
+        }
+
+        if ($request->filled('slug')) {
+            $dataQuery->where('slug', $request->slug);
         }
 
         $startingNumber = 1;
@@ -65,7 +71,6 @@ class KontenController extends Controller
         $dataQuery->transform(function ($item) use (&$startingNumber) {
             $item->setAttribute('nomor', $startingNumber++);
             $item->setAttribute('pembuka', ambilKata($item->isi, 15));
-
             $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
             return $item;
         });

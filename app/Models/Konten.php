@@ -15,7 +15,7 @@ class Konten extends Model
         parent::boot();
         //function dipakai, atur logika atau mendefinisikan nilai sebelum simpan data
         static::creating(function ($dt) {
-            $dt->slug = generateSlug($dt->judul, $dt->waktu);
+            $dt->slug = ($dt->slug !== '') ? $dt->slug : generateSlug($dt->judul, $dt->waktu);
             $user_id = auth()->check() ? auth()->id() : 1;
             $dt->user_id = $user_id;
         });

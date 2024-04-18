@@ -1,33 +1,20 @@
 @extends('template_website')
 
 @section('head')
-    <title>Konten Utama</title>
+    <title>Daftar {{ $kategori }}</title>
 @endsection
 
 @section('container')
 
-    <h1>Konten Web {{ $kategori }}</h1>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary btnRefresh" id="refresh">Refresh</button>
-                <ul class="dropdown-menu dropdown-menu-end" id="list-select-paging">
-                </ul>
-
-            </div>
-        </div>
-    </div>
+    <h1>Daftar {{ $kategori }}</h1>
 
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"></th>
                     <th scope="col">Artikel Web</th>
-                    <th scope="col">Penulis</th>
-                    <th scope="col">Statistik</th>
-                    <th scope="col">Waktu</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody id="data-list">
@@ -89,41 +76,28 @@ $(document).ready(function() {
 
                 $.each(response.data, function(index, dt) {
                     var hakakses='';
-                    var thumbnail=(dt.thumbnail)?`<img src="${dt.thumbnail}" width="125px" style="float:left;margin:5px;">`:"";
-                    
-                    // console.log(dt.aturgrup);
-                    var publikasi='<span class="badge text-bg-warning">Belum diperiksa</span>';
-                    var btnAksi=`<div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-primary btnGanti" data-id="${dt.id}" >Ganti</button>
-                                    <button type="button" class="btn btn-danger btnHapus" data-id="${dt.id}" >Hapus</button>
-                                </div>`;
-                    if(dt.publikasi){
-                        // $waktu=myFormatDate(date)
-                        publikasi=(dt.publikasi.is_publikasi)?`<span class="badge text-bg-success">Terpublikasi</span>`:`<span class="badge text-bg-danger">Ditolak</span>`;
-                        publikasi+=`<div class="font-12">${myLabel(dt.publikasi.catatan)}</div><div class="font-12"><i class="bi bi-calendar-event"></i> ${myFormatDate(dt.publikasi.user.created_at)}</div>`;
-                        publikasi+=`<div><i>${dt.publikasi.user.name}</i></div>`;
-                        btnAksi='';
-                    }
-                    
+                    var thumbnail=(dt.thumbnail!==null)?dt.thumbnail:"images/thumbnail.jpg";                    
+                    var urlread=base_url+'/read/'+dt.slug;
                     dataList.append(`
                         <tr data-id="${dt.id}"> 
-                            <td>${dt.nomor}</td> 
+                            <td></td> 
                             <td>
-                                <h5>${dt.judul}</h5>
-                                <div class='font-12'><i class="bi bi-calendar-event"></i> ${dt.waktu}</div>
+                                <img src="${base_url+'/'+thumbnail}" width="150px" style="float:left;margin:5px;">
+                                <h5><a href="${urlread}">${dt.judul}</a></h5>                                
                                 <div class='font-12'>${dt.slug}</div>
-                                ${thumbnail} ${dt.pembuka}
+                                ${dt.pembuka}
                             </td> 
-                            <td>${dt.user.name}</td> 
                             <td>
-                                <span class="badge text-bg-info">
-                                    <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                    <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                    <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
-                                </span>
+                                <div>${dt.user.name} - ${dt.jeniskonten.nama}</div>
+                                <div class='font-12'><i class="bi bi-calendar-event"></i> ${dt.waktu}</div>
+                                <div>
+                                    <span class="badge text-bg-info">
+                                        <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
+                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
+                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                    </span>
+                                </div>
                             </td> 
-                            <td>${dt.updated_at_format}</td> 
-                            <td>${btnAksi}</td>
                         </tr>`);
                 });
 
@@ -138,10 +112,6 @@ $(document).ready(function() {
         var search = $('#search-input').val();
         // alert(page);
         loadData(page, search);
-    });
-
-    $('#refresh').on('click', function(e) {
-        loadData();
     });
 
     // Handle search form submission

@@ -138,9 +138,9 @@ class DatabaseSeeder extends Seeder
 
         //untuk konten
         $dtdef = [
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/visi-misi', 'judul' => 'Visi Misi Kantor', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Visi misi instansi ini adalah</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/sejarah', 'judul' => 'Sejarah', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>sejarah instansi ini dimulai dari</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/struktur-organisasi', 'judul' => 'Struktur Organisasi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Struktur Organisasi berdasarkan peraturan yang berlaku sebagai berikut</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'visi-misi', 'judul' => 'Visi Misi Kantor', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Visi misi instansi ini adalah</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'sejarah', 'judul' => 'Sejarah', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>sejarah instansi ini dimulai dari</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'struktur-organisasi', 'judul' => 'Struktur Organisasi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Struktur Organisasi berdasarkan peraturan yang berlaku sebagai berikut</p>'],
         ];
 
         foreach ($dtdef as $dt) {
