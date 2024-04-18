@@ -32,7 +32,10 @@
                     <input type="text" name="nama" id="nama" class="form-control w-100" placeholder="nama menu" aria-label="menu" required>
                 </div>
                 <div class="col-sm-5 mb-2">
-                    <input type="text" name="url" id="url" class="form-control w-100" placeholder="url tujuan" aria-label="url" required>
+                    <input type="text" name="url" id="url" class="form-control w-100" placeholder="url tujuan" aria-label="url">
+                </div>
+                <div class="col-sm-5 mb-2">
+                    <input type="text" name="endpoint" id="endpoint" class="form-control w-100" placeholder="url tujuan" aria-label="endpoint">
                 </div>
                 <div class="col-sm-3 mb-2">
                     <select name="menu_id" id="menu_id" class="form-control" required>
@@ -133,6 +136,7 @@
                 $('#id').val(response.id);
                 $('#urut').val(response.urut);
                 $('#nama').val(response.nama);
+                $('#endpoint').val(response.endpoint);
                 $('#url').val(response.url);
                 $('#menu_id').val(menu_id).trigger('change');
             },

@@ -15,6 +15,7 @@ use App\Models\LikeDislike;
 use App\Models\PengaturanWeb;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Faker\Factory;
 // use Faker\Provider\File;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $factory = Factory::create();
         //untuk admin
         User::create([
             'name' => 'Administrator',
@@ -46,8 +48,9 @@ class DatabaseSeeder extends Seeder
         $dtdef = [
             ['user_id' => 1, 'nama' => 'Profil', 'slug' => 'profil', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Profil website'],
             ['user_id' => 1, 'nama' => 'Berita', 'slug' => 'berita', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Daftar berita website'],
-            ['user_id' => 1, 'nama' => 'Peraturan', 'slug' => 'peraturan', 'kategori' => 'FILE', 'deskripsi' => 'Daftar peraturan pada website'],
+            ['user_id' => 1, 'nama' => 'Pengumuman', 'slug' => 'pengumuman', 'kategori' => 'ARTIKEL', 'deskripsi' => 'Daftar pengumuman website'],
             ['user_id' => 1, 'nama' => 'Download', 'slug' => 'download', 'kategori' => 'FILE', 'deskripsi' => 'Daftar download pada website'],
+            ['user_id' => 1, 'nama' => 'Peraturan', 'slug' => 'peraturan', 'kategori' => 'FILE', 'deskripsi' => 'Daftar peraturan pada website'],
         ];
 
         foreach ($dtdef as $dt) {
@@ -63,18 +66,18 @@ class DatabaseSeeder extends Seeder
         //untuk menu
         $dtdef = [
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Halaman Depan', 'url' => '/'],
-            ['user_id' => 1, 'urut' => 2, 'nama' => 'Profil', 'url' => 'javascript:;'],
-            ['user_id' => 1, 'urut' => 3, 'nama' => 'Publikasi', 'url' => 'javascript:;'],
+            ['user_id' => 1, 'urut' => 2, 'nama' => 'Profil'],
+            ['user_id' => 1, 'urut' => 3, 'nama' => 'Publikasi'],
             ['user_id' => 1, 'urut' => 4, 'nama' => 'Login', 'url' => '/login'],
 
-            ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => '/visimisi', 'menu_id' => 2],
-            ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => '/sejarah', 'menu_id' => 2],
-            ['user_id' => 1, 'urut' => 3, 'nama' => 'Struktur Organisasi', 'url' => '/struktur-organisasi', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => 'read/visi-misi', 'endpoint' => 'api/read/visi-misi', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => 'read/sejarah', 'endpoint' => 'api/read/sejarah', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 3, 'nama' => 'Struktur Organisasi', 'url' => 'read/struktur-organisasi', 'endpoint' => 'api/read/struktur-organisasi', 'menu_id' => 2],
 
-            ['user_id' => 1, 'urut' => 1, 'nama' => 'Berita', 'url' => '/berita', 'menu_id' => 3],
-            ['user_id' => 1, 'urut' => 2, 'nama' => 'Pengumuman', 'url' => '/pengumuman', 'menu_id' => 3],
-            ['user_id' => 1, 'urut' => 3, 'nama' => 'Download', 'url' => '/download', 'menu_id' => 3],
-            ['user_id' => 1, 'urut' => 4, 'nama' => 'Peraturan', 'url' => '/peraturan', 'menu_id' => 3],
+            ['user_id' => 1, 'urut' => 1, 'nama' => 'Berita', 'url' => 'konten-web/berita', 'endpoint' => 'api/list-konten?jenis=berita&is_web=true&publikasi=1', 'menu_id' => 3],
+            ['user_id' => 1, 'urut' => 2, 'nama' => 'Pengumuman', 'url' => 'konten-web/pengumuman', 'endpoint' => 'api/list-konten?jenis=pengumuman&is_web=true&publikasi=1',  'menu_id' => 3],
+            ['user_id' => 1, 'urut' => 3, 'nama' => 'Download', 'url' => 'file-web/download', 'endpoint' => 'api/list-file?jenis=download&is_web=true&publikasi=1', 'menu_id' => 3],
+            ['user_id' => 1, 'urut' => 4, 'nama' => 'Peraturan', 'url' => 'file-web/peraturan', 'endpoint' => 'api/list-file?jenis=peraturan&is_web=true&publikasi=1', 'menu_id' => 3],
         ];
 
         foreach ($dtdef as $dt) {
@@ -82,10 +85,10 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $dt['user_id'],
                 'nama' => $dt['nama'],
                 'urut' => $dt['urut'],
-                'url' => $dt['url'],
             ];
-            if (isset($dt['menu_id']))
-                $import['menu_id'] = $dt['menu_id'];
+            $import['url'] = isset($dt['url']) ? $dt['url'] : null;
+            $import['endpoint'] = isset($dt['endpoint']) ? $dt['endpoint'] : null;
+            $import['menu_id'] = isset($dt['menu_id']) ? $dt['menu_id'] : null;
 
             Menu::create($import);
         }
@@ -135,12 +138,9 @@ class DatabaseSeeder extends Seeder
 
         //untuk konten
         $dtdef = [
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'judul' => 'Visi Misi Kantor', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Visi misi instansi ini adalah</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'judul' => 'Sejarah', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>sejarah instansi ini dimulai dari</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 1, 'judul' => 'Struktur Organisasi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Struktur Organisasi berdasarkan peraturan yang berlaku sebagai berikut</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 2, 'judul' => 'Launching Website Resmi Instansi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Alhamdulillah pada hari  ini ' . date('w') . 'tanggal ' . date('d F Y') . ' website instansi ini telah resmi diluncurkan. semoga bermanfaat</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 2, 'judul' => 'Buka Puasa Bersama', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Kantor kami melaksanakan buka puasa bersama di auditorium yang diikuti oleh semua pegawai</p>'],
-            ['user_id' => 1, 'jenis_konten_id' => 2, 'judul' => 'Launching Website Resmi Instansi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Pelantikan pejabat baru pada kantor ini telah dilaksanakan pada tanggal ' . date('d F Y') . ', kegiatan ini berlangsung sangat khidmat karena hampir dihadiri oleh seluruh unsur pegawai</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/visi-misi', 'judul' => 'Visi Misi Kantor', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Visi misi instansi ini adalah</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/sejarah', 'judul' => 'Sejarah', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>sejarah instansi ini dimulai dari</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'read/struktur-organisasi', 'judul' => 'Struktur Organisasi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Struktur Organisasi berdasarkan peraturan yang berlaku sebagai berikut</p>'],
         ];
 
         foreach ($dtdef as $dt) {
@@ -150,23 +150,61 @@ class DatabaseSeeder extends Seeder
                 'judul' => $dt['judul'],
                 'waktu' => $dt['waktu'],
                 'isi' => $dt['isi'],
-                'slug' => generateSlug($dt['judul'], $dt['waktu']),
+                'slug' => $dt['slug'],
             ]);
         }
 
-        for ($i = 1; $i <= 4; $i++)
+        //berita sampai 4 sd 13
+        for ($i = 1; $i <= 10; $i++) {
+            $judul = $factory->sentence;
+            Konten::create([
+                'user_id' => 1,
+                'jenis_konten_id' => 2,
+                'judul' => $judul,
+                'waktu' => $dt['waktu'],
+                'isi' => $factory->paragraph(2),
+                'slug' => generateSlug($judul, $dt['waktu']),
+            ]);
+        }
+
+        //pengumuman 13 sd 18
+        for ($i = 1; $i <= 5; $i++) {
+            $judul = $factory->sentence;
+            Konten::create([
+                'user_id' => 1,
+                'jenis_konten_id' => 3,
+                'judul' => $judul,
+                'waktu' => $dt['waktu'],
+                'isi' => $factory->paragraph(2),
+                'slug' => generateSlug($judul, $dt['waktu']),
+            ]);
+        }
+
+        //publikasi profil dan berita
+        for ($i = 1; $i <= 10; $i++)
             Publikasi::create([
                 'user_id' => 1,
                 'konten_id' => $i,
                 'is_publikasi' => 1,
             ]);
 
-        Publikasi::create([
-            'user_id' => 1,
-            'konten_id' => 5,
-            'is_publikasi' => 0,
-            'catatan' => 'konten ini sudah terbit sebelumnya',
-        ]);
+        //publikasi untuk pengumuman
+        for ($i = 13; $i <= 16; $i++)
+            Publikasi::create([
+                'user_id' => 1,
+                'konten_id' => $i,
+                'is_publikasi' => 1,
+            ]);
+
+        //tolak untuk berita
+        for ($i = 11; $i <= 11; $i++)
+            Publikasi::create([
+                'user_id' => 1,
+                'konten_id' => $i,
+                'is_publikasi' => 2,
+                'catatan' => 'cek lagi kontennya',
+            ]);
+
 
         for ($i = 1; $i <= 5; $i++)
             Komentar::create([
@@ -193,12 +231,12 @@ class DatabaseSeeder extends Seeder
 
         //untuk file
         $dtdef = [
-            ['user_id' => 1, 'jenis_konten_id' => 3, 'judul' => 'Formulir Pendaftaran', 'waktu' => date('Y-m-d H:i:s')],
-            ['user_id' => 1, 'jenis_konten_id' => 3, 'judul' => 'Buku Pedoman Pegawai', 'waktu' => date('Y-m-d H:i:s')],
-            ['user_id' => 1, 'jenis_konten_id' => 3, 'judul' => 'SBU Tahun 2024', 'waktu' => date('Y-m-d H:i:s')],
-            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'SOP Penerimaan Pegawai', 'waktu' => date('Y-m-d H:i:s')],
-            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'SK Pendirian Kantor', 'waktu' => date('Y-m-d H:i:s')],
-            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'SK Pedoman Kenaikan Pangkat', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'Formulir Pendaftaran', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'Buku Pedoman Pegawai', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 4, 'judul' => 'SBU Tahun 2024', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 5, 'judul' => 'SOP Penerimaan Pegawai', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 5, 'judul' => 'SK Pendirian Kantor', 'waktu' => date('Y-m-d H:i:s')],
+            ['user_id' => 1, 'jenis_konten_id' => 5, 'judul' => 'SK Pedoman Kenaikan Pangkat', 'waktu' => date('Y-m-d H:i:s')],
         ];
 
         foreach ($dtdef as $i => $dt) {
@@ -226,6 +264,12 @@ class DatabaseSeeder extends Seeder
                 'is_publikasi' => 0,
                 'catatan' => 'ditolak, ini catatan publikasi file ke-' . $i,
             ]);
+
+        Publikasi::create([
+            'user_id' => 1,
+            'file_id' => 6,
+            'is_publikasi' => 1,
+        ]);
 
         for ($i = 1; $i <= 5; $i++) {
             Komentar::create([

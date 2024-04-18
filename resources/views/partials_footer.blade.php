@@ -33,7 +33,7 @@
 function logoutApi() {
     $.post('/api/logout', function(response) {
         localStorage.removeItem('access_token');
-        logoutWeb();
+        window.location.replace("{{ route('login') }}");
     }).fail(function(xhr) {
         var errorMessage = "An error occurred while logging out from API: ";
         if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -41,7 +41,8 @@ function logoutApi() {
         } else {
             errorMessage += "Unknown error.";
         }
-        alert(errorMessage);
+        console.log(errorMessage);
+        window.location.replace("{{ route('login') }}");
     });
 }
 
@@ -56,7 +57,7 @@ function logoutWeb() {
             'X-CSRF-TOKEN': csrfToken
         },
         success: function(response) {
-            window.location.replace("{{ route('login') }}");
+            logoutApi();
         },
         error: function(xhr) {
             var errorMessage = "An error occurred while logging out from web session: ";

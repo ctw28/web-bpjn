@@ -8,6 +8,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\GrupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\KontenController;
+use App\Http\Controllers\WebAppController;
 use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\PublikasiController;
@@ -31,7 +32,10 @@ Route::get('/info-web', [PengaturanWebController::class, 'index']);
 Route::get('/load-menu-tree', [MenuController::class, 'getMenu']);
 Route::get('/daftar', [KontenController::class, 'index']);
 Route::get('/get-jenis-konten', [JenisKontenController::class, 'index']);
+Route::get('/get-menu', [MenuController::class, 'index']);
 
+Route::get('/list-konten', [KontenController::class, 'index']);
+Route::get('/list-file', [FileController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

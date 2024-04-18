@@ -16,7 +16,8 @@ class MenuRequest extends FormRequest
         $rules = [
             'menu_id' => 'nullable',
             'nama' => 'required|string',
-            'url' => 'required|string',
+            'url' => 'nullable|string',
+            'endpoint' => 'nullable|string',
         ];
 
         if ($this->isMethod('post')) {
@@ -34,6 +35,7 @@ class MenuRequest extends FormRequest
             'menu_id' => 'menu parent',
             'nama' => 'nama menu',
             'url' => 'url menu tujuan',
+            'endpoint' => 'endpoint api tujuan',
         ];
     }
 }

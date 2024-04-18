@@ -35,9 +35,9 @@ function sesuaikanPengaturan(){
 
     $('meta[name="description"]').attr('content', pengaturanWeb.deskripsi);
     $('meta[name="keywords"]').attr('content', pengaturanWeb.keywords);
-    $('link[rel="shortcut icon"]').attr('href', icon);
-    $('link[rel="icon"]').attr('href', icon);
-    $('#logo-web').attr('src', logo);    
+    $('link[rel="shortcut icon"]').attr('href', base_url+'/'+icon);
+    $('link[rel="icon"]').attr('href', base_url+'/'+icon);
+    $('#logo-web').attr('src', base_url+'/'+logo);    
     $('#nama-web').html(pengaturanWeb.nama);    
     
 }
@@ -49,7 +49,7 @@ function getPengaturanWeb() {
 
 function getInfo() {
     $.ajax({
-        url: 'api/info-web',
+        url: base_url+'/api/info-web',
         type: 'get',
         dataType: 'json',
         success: function(response) {

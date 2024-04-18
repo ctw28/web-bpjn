@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class WebAppController extends Controller
 {
@@ -35,6 +36,10 @@ class WebAppController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return response()->json(['message' => 'Logged out successfully'], 200);
+    }
+
+    public function listKonten()
+    {
     }
 
     public function session()
@@ -72,14 +77,14 @@ class WebAppController extends Controller
         return view('menu');
     }
 
-    public function kontenWeb()
+    public function kontenDashboard()
     {
-        return view('konten_web');
+        return view('konten_dashboard');
     }
 
-    public function fileWeb()
+    public function fileDashboard()
     {
-        return view('file_web');
+        return view('file_dashboard');
     }
 
     public function verifikasiKonten()
@@ -105,5 +110,16 @@ class WebAppController extends Controller
     public function web()
     {
         return view('website');
+    }
+
+    public function kontenWeb($kategori)
+    {
+        return view('konten_web', ['kategori' => $kategori]);
+    }
+
+
+    public function fileWeb($kategori)
+    {
+        return view('file_web', ['kategori' => $kategori]);
     }
 }

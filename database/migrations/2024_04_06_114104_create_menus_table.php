@@ -17,7 +17,8 @@ class CreateMenusTable extends Migration
             $table->id();
             $table->smallInteger('urut')->default(1);
             $table->string('nama')->unique();
-            $table->string('url');
+            $table->string('url')->nullable()->unique();
+            $table->string('endpoint')->nullable();
             $table->foreignId('menu_id')->nullable();
             $table->foreign('menu_id')->references('id')->on('menus')->restrictOnDelete();
             $table->foreignId('user_id');

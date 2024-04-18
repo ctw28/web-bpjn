@@ -1,77 +1,17 @@
-@extends('template_dashboard')
+@extends('template_website')
 
 @section('head')
-    <title>Artikel Website</title>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
+    <title>Konten Utama</title>
 @endsection
 
 @section('container')
 
-    <h1>Artikel</h1>
-    <p>digunakan untuk mengelola artikel yang akan tampil website ini </p>
-
-    <div class="accordion mb-3" id="frmAcr">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="frm-acr-header">
-                <button class="accordion-button collapsed" id="tambahForm" type="button" data-bs-toggle="collapse" data-bs-target="#bodyAcr" aria-expanded="false" aria-controls="aria-acr-controls">
-                    <h3>Formulir Artikel Web</h3>
-                </button>
-            </h2>
-            <div id="bodyAcr" class="accordion-collapse collapse" aria-labelledby="frm-acr-header" data-bs-parent="#frmAcr">
-                <div class="accordion-body">
-                    <form id="form" class="row">
-                        <input type="hidden" name="id" id="id" >
-                        <div class="col-sm-7 mb-3">
-                            <label for="judul" class="form-label">Judul</label>
-                            <input type="text" class="form-control w-100" id="judul" name="judul" required>
-                        </div>
-                        <div class="col-sm-5 mb-3">
-                            <label for="slug" class="form-label">Slug</label>
-                            <input type="text" class="form-control w-100" id="slug" name="slug" >
-                        </div>
-                        <div class="col-sm-4 mb-3">
-                            <label for="jenis_konten_id" class="form-label">Jenis</label>
-                            <select class="form-control w-100" id="jenis_konten_id" name="jenis_konten_id" required></select>
-                        </div>
-
-                        <div class="col-sm-3 mb-3">
-                            <label for="waktu" class="form-label">Tanggal Artikel</label>
-                            <input type="text" class="form-control datepicker" id="waktu" name="waktu" value="{{ date('Y-m-d H:i:s') }}" required>
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <label for="editor" class="form-label">Isi Artikel</label>
-                            <div id="editor-container">
-                                <textarea id="editor" name="isi" required></textarea>
-                            </div>                            
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-9">
-                                <label for="thumbnail" class="form-label">Thumbnail Artikel</label>
-                                <input type="file" class="form-control w-100" id="thumbnail" name="file" accept="image/*">
-                            </div>
-                            <div class="col-sm-3">
-                                <div id="preview-img"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 mb-3">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                            <button type="button" class="btn btn-warning btnBatal">Batal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1>Konten Web {{ $kategori }}</h1>
 
     <div class="row">
         <div class="col-sm-12">
             <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary btnTambah" id="tambah" >Tambah</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary btnRefresh" id="refresh">Refresh</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" id="btn-paging">
-                    Paging
-                </button>
                 <ul class="dropdown-menu dropdown-menu-end" id="list-select-paging">
                 </ul>
 
@@ -86,10 +26,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Artikel Web</th>
                     <th scope="col">Penulis</th>
-                    <th scope="col">Kategori/ Status Publikasi</th>
                     <th scope="col">Statistik</th>
                     <th scope="col">Waktu</th>
-                    <th scope="col">Aksi</th>
                 </tr>
             </thead>
             <tbody id="data-list">
@@ -109,99 +47,40 @@
 
 <script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/pagination.js') }}"></script>
-<script src="{{ asset('js/token.js') }}"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-<script src="{{ asset('plugins/bootstrap-material-moment/moment.js') }}"></script>
-<script src="{{ asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
 
 <script>
 
-var vApiUrl='api/konten';
+var vApiUrl=base_url;
 var vDataGrup=[];
+var vKategori='{{ "konten-web/".$kategori }}';
 
 $(document).ready(function() {
-
-    loadJenisKonten();
-    loadData();
-
-    $('.datepicker').bootstrapMaterialDatePicker({
-        weekStart: 0,
-        format: 'YYYY-MM-DD HH:mm:ss',
-    });
-    
-    $('#editor').summernote({
-        height: 300,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ],            
-        callbacks: {               
-            onImageUpload: function(files) {
-                sendFile(files[0], $(this));
-            }
-        }
-    });
-
-    function sendFile(file, editor) {
-        var data = new FormData();
-        data.append("file", file);
-        $.ajax({
-            data: data,
-            type: "POST",
-            url: "/api/upload-image-editor",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                editor.summernote('insertImage', response.image);
-            }
-        });
-    }
-
-    $('#thumbnail').on('change', function(event) {
-        var input = event.target;
-        var reader = new FileReader();
-        reader.onload = function(){
-            var dataURL = reader.result;
-            $('#preview-img').html('<img src="' + dataURL + '" width="100%" alt="Preview Image">');
-        };
-        reader.readAsDataURL(input.files[0]);
-    });
-
-
-    function loadJenisKonten(){
-        $.ajax({
-            url: 'api/get-jenis-konten?showall=true&kategori=artikel',
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                $('#jenis_konten_id').empty();   
-                $.each(response, function(index, jenisKonten) {
-                    $('#jenis_konten_id').append('<option value="' + jenisKonten.id + '">' + jenisKonten.nama + '</option>');
-                });                    
-                // console.log(response);
-            },
-            error: function() {
-                alert('operasi gagal dilakukan!');
-            }
-        });                
-    }
+    // loadData();
+    getMenu();
 
     $('.item-paging').on('click', function() {
         vPaging=$(this).data('nilai');
         loadData();
     })
 
+    function getMenu(){
+        $.ajax({
+            url: base_url+'/api/get-menu?search='+vKategori+'&showall=true',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                vApiUrl=vApiUrl+'/'+response[0].endpoint;
+                loadData();
+            },
+            error: function() {
+                alert(jenis+' tidak ditemukan!');
+            }
+        });
+    }      
 
     function loadData(page = 1, search = '') {
         $.ajax({
-            url: vApiUrl+'?page=' + page + '&search=' + search + '&paging=' + vPaging,
+            url: vApiUrl+'&page=' + page + '&search=' + search,
             method: 'GET',
             success: function(response) {
                 var dataList = $('#data-list');
@@ -237,10 +116,6 @@ $(document).ready(function() {
                             </td> 
                             <td>${dt.user.name}</td> 
                             <td>
-                                <div>${dt.jeniskonten.nama}</div>
-                                ${publikasi}
-                            </td> 
-                            <td>
                                 <span class="badge text-bg-info">
                                     <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
                                     <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
@@ -257,41 +132,11 @@ $(document).ready(function() {
         });
     }
 
-    $('#bodyAcr').on('shown.bs.collapse', function () {
-        $('#judul').focus();
-    });
-
-    function resetForm(){
-        $('#form input').val('');
-        $('#editor').summernote('code', '');
-        $('#form')[0].reset();
-        $('#preview-img').html('');
-    }
-
-    $(document).on('click', '.btnTambah', function() {
-        $('html, body').scrollTop($('#tambahForm').offset().top);
-        $('#bodyAcr').collapse('show'); // Menampilkan accordion
-        resetForm();
-        $('#judul').focus();
-    });
-
-    $('.btnBatal').on('click', function(e) {
-        event.preventDefault();
-        resetForm();
-        $('#judul').focus();
-        $('#bodyAcr').collapse('hide'); 
-    });
-
-    $('#tambahBaru').on('click', function(e) {
-        e.preventDefault();
-        resetForm();
-        $('#judul').focus();
-    });
-
     // Handle page change
     $(document).on('click', '.page-link', function() {
         var page = $(this).data('page');
         var search = $('#search-input').val();
+        // alert(page);
         loadData(page, search);
     });
 
@@ -309,87 +154,6 @@ $(document).ready(function() {
         }
     });
 
-    $("#form").validate({
-        rules: {
-            file: {
-                required: function(element) {
-                    return $('#id').val().trim() === '';
-                }
-            }          
-        },            
-        submitHandler: function(form) {
-            var selectedPage = $('.page-item.active .page-link').data('page');
-            var formData = new FormData($(form)[0]);
-            var vUrl = vApiUrl;
-
-            if($('#id').val()!==''){
-                vUrl = vApiUrl+'/'+$('#id').val();
-                formData.append("_method", "PUT");
-            }
-
-            $.ajax({
-                url: vUrl,
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    resetForm();
-                    loadData(selectedPage);
-                    toastr.success('operasi berhasil dilakukan!', 'berhasil');
-                },
-                error: function() {
-                    alert('operasi gagal dilakukan!');
-                }
-            });            
-        }
-    });        
-
-    $(document).on('click', '.btnGanti', function() {
-        var id = $(this).data('id');
-        var selectedPage = $('.page-item.active .page-link').data('page');
-        $.ajax({
-            url: vApiUrl+'/' + id,
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                $('html, body').scrollTop($('#tambahForm').offset().top);
-                $('#bodyAcr').collapse('show'); // Menampilkan accordion
-                $('#id').val(response.id);
-                $('#judul').val(response.judul);
-                $('#slug').val(response.slug);
-                $('#editor').summernote('code', response.isi);
-                $('#waktu').val(response.waktu);
-                $('#jenis_konten_id').val(response.jenis_konten_id);
-                
-                if(response.thumbnail)
-                    $('#preview-img').html('<img src="' + response.thumbnail + '" width="100%" alt="Preview Image">');
-                                
-            },
-            error: function() {
-                alert('operasi gagal dilakukan!');
-            }
-        });                
-    });
-
-    $(document).on('click', '.btnHapus', function() {
-        var id = $(this).data('id');
-        var selectedPage = $('.page-item.active .page-link').data('page');
-        if(confirm('apakah anda yakin?'))
-            $.ajax({
-                url: vApiUrl+'/' + id,
-                method: 'DELETE',
-                dataType: 'json',
-                success: function(response) {
-                    loadData(selectedPage);
-                    toastr.success('operasi berhasil dilakukan!', 'berhasil');
-                },
-                error: function() {
-                    alert('operasi gagal dilakukan!');
-                }
-            });                
-    });
 });
 
 </script>

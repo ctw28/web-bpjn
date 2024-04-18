@@ -16,8 +16,9 @@ class MenuController extends Controller
             $item = [
                 'id' => $menu->id,
                 'text' => $menu->nama,
-                'url' => $menu->url,
+                'endpoint' => $menu->endpoint,
             ];
+            $item['url'] = ($menu->url) ? $menu->url : '#';
             $submenus = $this->loadMenu($menu->id);
             if (!empty($submenus)) {
                 $item['inc'] = $submenus;

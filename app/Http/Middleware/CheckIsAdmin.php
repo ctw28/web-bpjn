@@ -16,7 +16,7 @@ class CheckIsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!is_admin($request->user()->id)) {
+        if (!is_admin(auth()->id())) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 

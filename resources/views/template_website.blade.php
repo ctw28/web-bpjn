@@ -8,6 +8,9 @@
         padding-top: 15px; /* Sesuaikan nilai ini dengan tinggi navbar Anda */
     }    
   </style>  
+  <script>
+    var base_url="{{ url('/') }}";
+  </script>
 </head>
 <body>
   <!-- Navbar -->
@@ -31,7 +34,7 @@
   <script>
     function getMenuWeb() {
         $.ajax({
-            url: 'api/load-menu-tree',
+            url: base_url+'/api/load-menu-tree',
             type: 'get',
             dataType: 'json',
             success: function(response) {
@@ -56,7 +59,7 @@
               var subUl = $('<ul class="dropdown-menu"></ul>');
               $.each(item.inc, function(subIndex, subItem) {
                   var subLi = $('<li class="nav-item"></li>');
-                  var subA = $('<a class="dropdown-item"></a>').text(subItem.text).attr('href', subItem.url);
+                  var subA = $('<a class="dropdown-item"></a>').text(subItem.text).attr('href', base_url+'/'+subItem.url);
                   subLi.append(subA);
                   subUl.append(subLi);
               });

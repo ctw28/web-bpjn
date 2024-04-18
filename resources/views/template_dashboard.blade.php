@@ -3,12 +3,15 @@
 <head>
   @include('partials_head')
   @yield('head')
+  <script>
+    var base_url="{{ url('/') }}";
+  </script>
 </head>
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Dashboard Website</a>
+      <a class="navbar-brand" href="{{ url('/') }}">Dashboard Website</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -26,8 +29,8 @@
               Konten
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{{ route('konten-web') }}">Artikel</a></li>
-              <li><a class="dropdown-item" href="{{ route('file-web') }}">File</a></li>
+              <li><a class="dropdown-item" href="{{ route('konten-dashboard') }}">Artikel</a></li>
+              <li><a class="dropdown-item" href="{{ route('file-dashboard') }}">File</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -48,7 +51,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="javascript:;" onclick="logoutApi()">Keluar</a>
+            <a class="nav-link" href="javascript:;" onclick="logoutWeb()">Keluar</a>
           </li>
           @endauth
         </ul>

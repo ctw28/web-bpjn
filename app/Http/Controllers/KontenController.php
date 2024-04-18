@@ -13,41 +13,53 @@ class KontenController extends Controller
     public function index(Request $request)
     {
         $dataQuery = Konten::with(['jeniskonten', 'user', 'komentar', 'likedislike', 'publikasi.user'])->orderBy('updated_at', 'desc');
-        $dataQuery->where('user_id', 1);
+        if (!$request->filled('is_web')) {
+            if (!is_admin(auth()->id()))
+                $dataQuery->where('user_id', auth()->id());
+        }
 
         if ($request->filled('search')) {
             $dataQuery->where('judul', 'like', '%' . $request->search . '%')
                 ->orWhere('slug', 'like', '%' . $request->search . '%');
         }
 
+        if ($request->filled('jenis')) {
+            $jenis = $request->jenis;
+            $dataQuery->whereHas('jeniskonten', function ($q) use ($jenis) {
+                $q->where('slug', $jenis);
+            });
+        }
+
         if ($request->filled('publikasi')) {
             $publikasiValue = $request->publikasi;
             if ($publikasiValue == 1) {
                 $dataQuery->whereHas('publikasi', function ($q) {
-                    $q->where('publikasis.is_publikasi', 1);
+                    $q->where('is_publikasi', 1);
                 });
             } elseif ($publikasiValue == 0) {
                 $dataQuery->whereHas('publikasi', function ($q) {
-                    $q->where('publikasis.is_publikasi', 0);
+                    $q->where('is_publikasi', 0);
                 });
             } elseif ($publikasiValue == 2) {
                 $dataQuery->whereDoesntHave('publikasi');
             }
         }
 
-        // $query = $dataQuery->toSql();
-        // dd($query);
-
+        $startingNumber = 1;
         if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
-            $startingNumber = 1;
         } else {
-            $paging = 25;
-            if ($request->filled('paging')) {
-                $paging = $request->paging;
+            if ($request->filled('limit')) {
+                $limit = $request->limit;
+                $dataQuery = $dataQuery->limit($limit)->get();
+            } else {
+                $paging = 25;
+                if ($request->filled('paging')) {
+                    $paging = $request->paging;
+                }
+                $dataQuery = $dataQuery->paginate($paging);
+                $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
             }
-            $dataQuery = $dataQuery->paginate($paging);
-            $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
         }
 
         $dataQuery->transform(function ($item) use (&$startingNumber) {
