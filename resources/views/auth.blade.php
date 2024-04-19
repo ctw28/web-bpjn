@@ -54,7 +54,7 @@
     $("#myform").validate({
         submitHandler: function(form) {
             $.ajax({
-                url: '/api/auth-cek',
+                url: base_url+'/'+'api/auth-cek',
                 type: 'post',
                 data: $(form).serialize(),
                 dataType: 'json',
@@ -72,7 +72,7 @@
     
     function setSession(form){
         $.ajax({
-            url: '/set-session',
+            url: base_url+'/'+'set-session',
             type: 'POST',
             data: $(form).serialize(),
             headers: {

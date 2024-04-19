@@ -59,7 +59,7 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl='api/jenis-konten';
+    var vApiUrl=base_url+'/'+'api/jenis-konten';
 
     function tambah(){
         $('#data-list').prepend(`

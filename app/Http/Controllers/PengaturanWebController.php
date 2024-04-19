@@ -35,12 +35,20 @@ class PengaturanWebController extends Controller
 
     public function store(PengaturanWebRequest $request)
     {
-        if ($request->hasFile('file')) {
-            $iconPath = uploadFile($request, null, 'favicon');
-            if ($iconPath) {
-                $request['icon'] = $iconPath;
+        if ($request->hasFile('fileicon')) {
+            $path = uploadFile($request, 'fileicon', 'images', 'favicon');
+            if ($path) {
+                $request['icon'] = $path;
             } else {
-                return response()->json(['message' => 'Gagal mengunggah ikon'], 500);
+                return response()->json(['message' => 'Gagal mengunggah icon'], 500);
+            }
+        }
+        if ($request->hasFile('filelogo')) {
+            $path = uploadFile($request, 'filelogo', 'images', 'logo');
+            if ($path) {
+                $request['logo'] = $path;
+            } else {
+                return response()->json(['message' => 'Gagal mengunggah logo'], 500);
             }
         }
         $dataSave = PengaturanWeb::create($request->all());
@@ -70,12 +78,20 @@ class PengaturanWebController extends Controller
         }
         $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
 
-        if ($request->hasFile('file')) {
-            $iconPath = uploadFile($request, 'favicon');
-            if ($iconPath) {
-                $request['icon'] = $iconPath;
+        if ($request->hasFile('fileicon')) {
+            $path = uploadFile($request, 'fileicon', 'images', 'favicon');
+            if ($path) {
+                $request['icon'] = $path;
             } else {
-                return response()->json(['message' => 'Gagal mengunggah ikon'], 500);
+                return response()->json(['message' => 'Gagal mengunggah icon'], 500);
+            }
+        }
+        if ($request->hasFile('filelogo')) {
+            $path = uploadFile($request, 'filelogo', 'images', 'logo');
+            if ($path) {
+                $request['logo'] = $path;
+            } else {
+                return response()->json(['message' => 'Gagal mengunggah logo'], 500);
             }
         }
         // dd($request->all());

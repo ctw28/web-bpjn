@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LikeDislike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AkunController;
@@ -10,10 +11,12 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\KontenController;
 use App\Http\Controllers\WebAppController;
 use App\Http\Controllers\AturGrupController;
+use App\Http\Controllers\HtmlCodeController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\PublikasiController;
 use App\Http\Controllers\ImageEditorController;
 use App\Http\Controllers\JenisKontenController;
+use App\Http\Controllers\LikeDislikeController;
 use App\Http\Controllers\PengaturanWebController;
 
 /*
@@ -28,14 +31,24 @@ use App\Http\Controllers\PengaturanWebController;
 */
 
 Route::post('/auth-cek', [AuthController::class, 'index']);
+Route::post('/simpan-komentar', [KomentarController::class, 'store']);
+
 Route::get('/info-web', [PengaturanWebController::class, 'index']);
 Route::get('/load-menu-tree', [MenuController::class, 'getMenu']);
 Route::get('/daftar', [KontenController::class, 'index']);
 Route::get('/get-jenis-konten', [JenisKontenController::class, 'index']);
 Route::get('/get-menu', [MenuController::class, 'index']);
+Route::get('/get-komentar', [KomentarController::class, 'index']);
 
 Route::get('/list-konten', [KontenController::class, 'index']);
 Route::get('/list-file', [FileController::class, 'index']);
+Route::get('/update-jumlah-akses-konten/{id}', [KontenController::class, 'updateJumlahAkses']);
+Route::get('/update-jumlah-akses-file/{id}', [FileController::class, 'updateJumlahAkses']);
+
+Route::get('/get-html-code', [HtmlCodeController::class, 'index']);
+
+Route::get('/like', [LikeDislikeController::class, 'index']);
+Route::post('/like', [LikeDislikeController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

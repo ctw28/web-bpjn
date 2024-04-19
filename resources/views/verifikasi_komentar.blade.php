@@ -121,7 +121,8 @@ $(document).ready(function() {
 
                     if(dt.is_publikasi!==null){
                         publikasi=(dt.is_publikasi)?`<span class="badge text-bg-success">Terpublikasi</span>`:`<span class="badge text-bg-danger">Ditolak</span>`;
-                        publikasi+=`<div><i>${dt.user.name}</i></div>`;
+                        if(dt.user)
+                            publikasi+=`<div><i>${dt.user.name}</i></div>`;
                     }
                     
                     dataList.append(`

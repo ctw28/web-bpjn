@@ -7,79 +7,53 @@ use Illuminate\Http\Request;
 
 class LikeDislikeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $count = 0;
+        if ($request->filled('konten_id')) {
+            $count = LikeDislike::where('konten_id', $request->konten_id)->count();
+        } elseif ($request->filled('file_id')) {
+            $count = LikeDislike::where('file_id', $request->file_id)->count();
+        }
+        return response()->json(['count' => $count]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $dataQuery = LikeDislike::create($request->all());
+        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+        return response()->json($dataQuery, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\LikeDislike  $likeDislike
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LikeDislike $likeDislike)
+    public function show($id)
     {
-        //
+        $dataQuery = LikeDislike::find($id);
+        if (!$dataQuery) {
+            return response()->json(['message' => 'data tidak ditemukan'], 404);
+        }
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\LikeDislike  $likeDislike
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LikeDislike $likeDislike)
+    public function update(Request $request, $id)
     {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+
+        $dataQuery->update($request->all());
+        return $dataQuery;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\LikeDislike  $likeDislike
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, LikeDislike $likeDislike)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\LikeDislike  $likeDislike
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(LikeDislike $likeDislike)
-    {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataQuery->delete();
+        return response()->json(null, 204);
     }
 }

@@ -117,7 +117,7 @@
 
 <script>
 
-var vApiUrl='api/konten';
+var vApiUrl=base_url+'/'+'api/konten';
 var vDataGrup=[];
 
 $(document).ready(function() {
@@ -154,7 +154,7 @@ $(document).ready(function() {
         $.ajax({
             data: data,
             type: "POST",
-            url: "/api/upload-image-editor",
+            url: base_url+'/'+"api/upload-image-editor",
             cache: false,
             contentType: false,
             processData: false,
@@ -177,7 +177,7 @@ $(document).ready(function() {
 
     function loadJenisKonten(){
         $.ajax({
-            url: 'api/get-jenis-konten?showall=true&kategori=artikel',
+            url: base_url+'/'+'api/get-jenis-konten?showall=true&kategori=artikel',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -243,8 +243,8 @@ $(document).ready(function() {
                             <td>
                                 <span class="badge text-bg-info">
                                     <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                    <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                    <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                    <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike_count}  
+                                    <i class="bi bi-chat-right-text"></i> ${dt.komentar_count}
                                 </span>
                             </td> 
                             <td>${dt.updated_at_format}</td> 

@@ -29,16 +29,37 @@
         <div class="row mb-3">
             <label for="icon" class="col-sm-2 col-form-label">Icon</label>
             <div class="col-sm-5">
-                <input type="file" class="form-control w-100" id="icon" name="file" accept=".png">
+                <input type="file" class="form-control w-100" id="icon" name="fileicon" accept=".png">
             </div>
             <div class="col-sm-2">
-                <div id="preview-img"></div>
+                <div id="preview-img-icon"></div>
+            </div>  
+        </div>  
+        <div class="row mb-3">
+            <label for="logo" class="col-sm-2 col-form-label">Logo</label>
+            <div class="col-sm-5">
+                <input type="file" class="form-control w-100" id="logo" name="filelogo" accept=".png">
+            </div>
+            <div class="col-sm-2">
+                <div id="preview-img-logo"></div>
             </div>  
         </div>  
         <div class="row mb-3">
             <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
             <div class="col-sm-8">
                 <textarea class="form-control w-100" id="alamat" name="alamat" rows="3"  required></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="longitude" class="col-sm-2 col-form-label">Longitude</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control w-100" id="longitude" name="longitude" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="latitude" class="col-sm-2 col-form-label">Latitude</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control w-100" id="latitude" name="latitude" required>
             </div>
         </div>
         <div class="row mb-3">
@@ -106,7 +127,7 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl='api/pengaturan-web';
+    var vApiUrl=base_url+'/'+'api/pengaturan-web';
 
     loadData();
     function loadData() {
@@ -120,14 +141,15 @@
                 $('#deskripsi').val(response.deskripsi);
                 $('#keywords').val(response.keywords);
 
-                var imageUrl = response.icon;
-                if(imageUrl===null){
-                    imageUrl='images/logo.png'
-                }
-                console.log(imageUrl);
-                $('#preview-img').html('<img src="' + imageUrl + '" height="45px" alt="Preview Image">');
+                var imageIcon=(response.icon!==null)?response.icon:'images/favicon.png';
+                var imageLogo=(response.logo!==null)?response.logo:'images/logo.png';
+                imageIcon=base_url+'/'+imageIcon;
+                imageLogo=base_url+'/'+imageLogo;
+                $('#preview-img-icon').html('<img src="' + imageIcon + '" height="45px" alt="Preview Image">');
+                $('#preview-img-logo').html('<img src="' + imageLogo + '" height="45px" alt="Preview Image">');
 
-
+                $('#longitude').val(response.longitude);
+                $('#latitude').val(response.latitude);
                 $('#fb').val(response.fb);
                 $('#youtube').val(response.youtube);
                 $('#ig').val(response.ig);
@@ -139,7 +161,7 @@
             },
             error: function() {
                 alert('operasi gagal dilakukan!');
-                window.location.replace('{{ url("/") }}');
+                // window.location.replace('{{ url("/") }}');
             }
         });                
     }
@@ -148,14 +170,23 @@
         loadData();
     });
 
-    $('#icon').on('change', function(event) {
+    function imgPrev(event,imgEl){
         var input = event.target;
         var reader = new FileReader();
         reader.onload = function(){
             var dataURL = reader.result;
-            $('#preview-img').html('<img src="' + dataURL + '" height="45px" alt="Preview Image">');
+            $(imgEl).html('<img src="' + dataURL + '" height="45px" alt="Preview Image">');
         };
         reader.readAsDataURL(input.files[0]);
+
+    }
+
+    $('#icon').on('change', function(event) {
+        imgPrev(event,'#preview-img-icon');
+    });
+
+    $('#logo').on('change', function(event) {
+        imgPrev(event,'#preview-img-logo');
     });
 
     $("#form").validate({
@@ -176,7 +207,10 @@
             twitter: {
                 url: true 
             },
-            file: {
+            fileicon: {
+                accept: "image/png"
+            },         
+            filelogo: {
                 accept: "image/png"
             }            
         },

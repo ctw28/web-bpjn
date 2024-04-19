@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ url('/') }}">
             <img src="{{ url('images/logo.png') }}" id="logo-web" alt="Logo" height="30">
             <span id="nama-web">Website</span>
         </a>      

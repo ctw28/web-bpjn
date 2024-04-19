@@ -11,7 +11,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url('/') }}">Dashboard Website</a>
+      <a class="navbar-brand" href="{{ url('/dashboard') }}">Dashboard Website</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -31,6 +31,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{{ route('konten-dashboard') }}">Artikel</a></li>
               <li><a class="dropdown-item" href="{{ route('file-dashboard') }}">File</a></li>
+              <li><a class="dropdown-item" href="#">Html Code Embed</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -73,7 +74,8 @@
   <!-- Footer -->
 
     <!-- Footer -->
-    @include('partials_footer')    
+    @include('partials_footer')
+    {{-- <script src="{{ asset('js/loading.js') }}"></script>     --}}
     @yield('script')
 
 </body>

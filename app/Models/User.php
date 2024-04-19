@@ -106,4 +106,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PengaturanWeb::class);
     }
+
+    public function htmlcode()
+    {
+        return $this->hasMany(HtmlCode::class);
+    }
 }

@@ -77,7 +77,7 @@ $(document).ready(function() {
                 $.each(response.data, function(index, dt) {
                     var hakakses='';
                     var thumbnail=(dt.thumbnail!==null)?dt.thumbnail:"images/thumbnail.jpg";                    
-                    var urlread=base_url+'/read/'+dt.slug;
+                    var urlread=base_url+'/konten-read/'+dt.slug;
                     dataList.append(`
                         <tr data-id="${dt.id}"> 
                             <td></td> 
@@ -93,8 +93,8 @@ $(document).ready(function() {
                                 <div>
                                     <span class="badge text-bg-info">
                                         <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike_count}  
+                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar_count}
                                     </span>
                                 </div>
                             </td> 

@@ -106,9 +106,9 @@ if (!function_exists('uploadFile')) {
 }
 
 if (!function_exists('uploadFile')) {
-    function uploadFile($request, $storagePath = null, $fileName = null)
+    function uploadFile($request, $reqFileName = 'file', $storagePath = null, $fileName = null)
     {
-        $uploadedFile = $request->file('file');
+        $uploadedFile = $request->file($reqFileName);
         $originalFileName = $uploadedFile->getClientOriginalName();
         $ukuranFile = $uploadedFile->getSize();
         $tipeFile = $uploadedFile->getMimeType();
@@ -119,11 +119,9 @@ if (!function_exists('uploadFile')) {
             File::makeDirectory(public_path($storagePath), 0755, true);
         }
 
+        $fileName = $fileName . "." . $uploadedFile->getClientOriginalExtension();
         if (!$fileName)
             $fileName = generateUniqueFileName();
-
-        $fileName = $fileName . "." . $uploadedFile->getClientOriginalExtension();
-
 
         $uploadedFile->move(public_path($storagePath), $fileName);
         $fileFullPath = public_path($storagePath . '/' . $fileName);
@@ -136,6 +134,7 @@ if (!function_exists('uploadFile')) {
 if (!function_exists('ambilKata')) {
     function ambilKata($text, $limit = 25)
     {
+        $text = strip_tags($text);
         $words = preg_split("/[\s,]+/", $text);
         $shortenedText = implode(' ', array_slice($words, 0, $limit));
         if (str_word_count($text) > $limit) {

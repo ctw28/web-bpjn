@@ -27,6 +27,8 @@ class CreatePengaturanWebsTable extends Migration
             $table->string('ig')->nullable();
             $table->string('email')->nullable();
             $table->string('twitter')->nullable();
+            $table->float('longitude')->nullable();
+            $table->float('latitude')->nullable();
             $table->boolean('confirm_konten')->default(1);
             $table->boolean('confirm_file')->default(1);
             $table->boolean('confirm_komentar')->default(1);

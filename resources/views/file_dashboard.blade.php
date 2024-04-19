@@ -111,7 +111,7 @@
 <script src="{{ asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
 
 <script>
-    var vApiUrl='api/file';
+    var vApiUrl=base_url+'/'+'api/file';
     var vDataGrup=[];
 
     $(function(){
@@ -125,7 +125,7 @@
 
         function loadJenisKonten(){
             $.ajax({
-                url: 'api/get-jenis-konten?showall=true&kategori=file',
+                url: base_url+'/'+'api/get-jenis-konten?showall=true&kategori=file',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -190,8 +190,8 @@
                                 <td>
                                     <span class="badge text-bg-info">
                                         <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike_count}  
+                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar_count}
                                     </span>
                                 </td> 
                                 <td>${dt.updated_at_format}</td> 

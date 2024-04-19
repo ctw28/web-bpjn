@@ -10,6 +10,15 @@ class Komentar extends Model
     use HasFactory;
     protected $guarded = ["id"];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::updating(function ($dt) {
+            $user_id = auth()->check() ? auth()->id() : 1;
+            $dt->user_id = $user_id;
+        });
+    }
+
     public function setIsPublikasiAttribute($value)
     {
         if (auth()->check()) {

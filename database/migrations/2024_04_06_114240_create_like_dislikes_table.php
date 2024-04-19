@@ -15,7 +15,7 @@ class CreateLikeDislikesTable extends Migration
     {
         Schema::create('like_dislikes', function (Blueprint $table) {
             $table->id();
-            $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
+            // $table->enum('kategori', ['KONTEN', 'FILE'])->default('KONTEN');
             $table->foreignId('konten_id')->nullable();
             $table->foreign('konten_id')->references('id')->on('kontens')->cascadeOnDelete();
             $table->foreignId('file_id')->nullable();

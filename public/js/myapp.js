@@ -25,7 +25,7 @@ function myLabel(tmpVar){
 function sesuaikanPengaturan(){
     var pengaturanWeb = getPengaturanWeb();
     var logo = pengaturanWeb.logo!==null ? pengaturanWeb.logo : 'images/logo.png';
-    var icon = pengaturanWeb.icon!==null ? pengaturanWeb.icon : 'images/logo.png';
+    var icon = pengaturanWeb.icon!==null ? pengaturanWeb.icon : 'images/icon.png';
 
     var judul = pengaturanWeb.nama.trim();
     if (!document.title.includes(judul)) {
@@ -36,7 +36,7 @@ function sesuaikanPengaturan(){
     $('meta[name="description"]').attr('content', pengaturanWeb.deskripsi);
     $('meta[name="keywords"]').attr('content', pengaturanWeb.keywords);
     $('link[rel="shortcut icon"]').attr('href', base_url+'/'+icon);
-    $('link[rel="icon"]').attr('href', base_url+'/'+icon);
+    // $('link[rel="icon"]').attr('href', base_url+'/'+icon);
     $('#logo-web').attr('src', base_url+'/'+logo);    
     $('#nama-web').html(pengaturanWeb.nama);    
     
@@ -54,6 +54,22 @@ function getInfo() {
         dataType: 'json',
         success: function(response) {
             localStorage.setItem('pengaturanWeb', JSON.stringify(response.data[0]));
+        },
+        error: function(error) {
+            console.error(error);
+        }
+    });
+}
+
+function htmlCode(slug,element) {
+    $(element).html(slug+' tidak ditemukan');
+    $.ajax({
+        url: base_url+'/api/get-html-code?is_web=true&showall=true&slug='+slug,
+        type: 'get',
+        dataType: 'json',
+        success: function(response) {
+            if(response.length>0)
+                $(element).html(response[0].code);        
         },
         error: function(error) {
             console.error(error);

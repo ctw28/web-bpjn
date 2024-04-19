@@ -2,43 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Komentar;
+use App\Models\HtmlCode;
 use Illuminate\Http\Request;
-use App\Http\Requests\KomentarRequest;
+use App\Http\Requests\HtmlCodeRequest;
 
-class KomentarController extends Controller
+class HtmlCodeController extends Controller
 {
     public function index(Request $request)
     {
-        $dataQuery = Komentar::with(['konten', 'file', 'user',])->orderBy('created_at', 'desc');
+        $dataQuery = HtmlCode::with(['user']);
 
-        if ($request->filled('konten_id')) {
-            $dataQuery->where('konten_id', $request->konten_id);
-        } else if ($request->filled('file_id')) {
-            $dataQuery->where('file_id', $request->file_id);
+        if (!$request->filled('is_web')) {
+            if (!is_admin(auth()->id()))
+                $dataQuery->where('user_id', auth()->id());
         }
 
-        if ($request->filled('publikasi')) {
-            $publikasiValue = $request->publikasi;
-            if ($publikasiValue == 1) {
-                $dataQuery->where('is_publikasi', 1);
-            } elseif ($publikasiValue == 0) {
-                $dataQuery->where('is_publikasi', 0);
-            } elseif ($publikasiValue == 2) {
-                $dataQuery->whereNull('is_publikasi');
-            }
+        if ($request->filled('search')) {
+            $dataQuery->where('judul', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('slug')) {
+            $dataQuery->where('slug', $request->slug);
         }
 
         $startingNumber = 1;
         if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
         } else {
-            $paging = 25;
-            if ($request->filled('paging')) {
-                $paging = $request->paging;
+            if ($request->filled('limit')) {
+                $limit = $request->limit;
+                $dataQuery = $dataQuery->limit($limit)->get();
+            } else {
+                $paging = 25;
+                if ($request->filled('paging')) {
+                    $paging = $request->paging;
+                }
+                $dataQuery = $dataQuery->paginate($paging);
+                $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
             }
-            $dataQuery = $dataQuery->paginate($paging);
-            $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
         }
 
         $dataQuery->transform(function ($item) use (&$startingNumber) {
@@ -50,31 +51,29 @@ class KomentarController extends Controller
         return response()->json($dataQuery);
     }
 
-    public function store(KomentarRequest $request)
+    public function store(HtmlCodeRequest $request)
     {
-        $dataSave = Komentar::create($request->all());
-        $dataQuery = Komentar::where('id', $dataSave->id)->first();
+        $dataQuery = HtmlCode::create($request->all());
         $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
         return response()->json($dataQuery, 201);
     }
 
     public function show($id)
     {
-        $dataQuery = Komentar::with(['konten', 'user', 'file'])->find($id);
+        $dataQuery = HtmlCode::with(['user'])->find($id);
         if (!$dataQuery) {
             return response()->json(['message' => 'data tidak ditemukan'], 404);
         }
         return response()->json($dataQuery);
     }
 
-    public function update(KomentarRequest $request, $id)
+    public function update(HtmlCodeRequest $request, $id)
     {
         $dataQueryResponse = $this->show($id);
         if ($dataQueryResponse->getStatusCode() === 404) {
             return $dataQueryResponse;
         }
         $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
-
         $dataQuery->update($request->all());
         return response()->json($dataQuery, 200);
     }

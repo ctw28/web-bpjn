@@ -55,7 +55,7 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl='api/grup';
+    var vApiUrl=base_url+'/'+'api/grup';
 
     function tambah(){
         $('#data-list').prepend(`

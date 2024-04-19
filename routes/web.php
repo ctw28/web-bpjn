@@ -21,7 +21,8 @@ Route::post('/set-session', [WebAppController::class, 'setSession'])->name('setS
 Route::get('/session', [WebAppController::class, 'session'])->name('session');
 Route::get('/konten-web/{kategori}', [WebAppController::class, 'kontenWeb'])->name('konten-web');
 Route::get('/file-web/{kategori}', [WebAppController::class, 'fileWeb'])->name('file-web');
-Route::get('/read/{slug}', [WebAppController::class, 'read'])->name('read');
+Route::get('/konten-read/{slug}', [WebAppController::class, 'kontenRead'])->name('konten-read');
+Route::get('/file-read/{slug}', [WebAppController::class, 'fileRead'])->name('file-read');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/web-logout', [WebAppController::class, 'logout']);

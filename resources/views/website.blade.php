@@ -30,64 +30,42 @@
       </button>
     </div>
 
-    <div class="mt-2" id="pengumuman" style="display: none;">
+    <!-- Pengumuman -->
+    <div class="mt-3" id="pengumuman" style="display: none;">
       <h2>Pengumuman</h2>
       <div class="row" id="card-pengumuman">
       </div>
     </div>
 
+    <!-- Tentang Kami -->
+    <div class="text-bg-secondary p-3 mt-3" style="text-align: center;">
+      <h2>Tentang Kami</h2>
+      <div id="tentang-kami"></div>
+    </div>
+
     <!-- List Berita Terbaru -->
-    <div class="mt-5" id="berita" style="display: none;">
+    <div class="mt-3" id="berita" style="display: none;">
       <h2>Berita Terbaru</h2>
       <div class="row" id="card-berita">
-          <div class="col-md-6">
-              <div class="card mb-3">
-                  <img src="{{ url('images/thumbnail.jpg') }}" class="card-img-top" alt="Thumbnail Berita 1">
-                  <div class="card-body">
-                      <h5 class="card-title">Judul Berita 1</h5>
-                      <p class="card-text">Deskripsi singkat tentang Berita 1.</p>
-                      <a href="#" class="btn btn-primary">Baca Selengkapnya</a>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6">
-              <div class="card mb-3">
-                  <img src="{{ url('images/thumbnail.jpg') }}" class="card-img-top" alt="Thumbnail Berita 2">
-                  <div class="card-body">
-                      <h5 class="card-title">Judul Berita 2</h5>
-                      <p class="card-text">Deskripsi singkat tentang Berita 2.</p>
-                      <a href="#" class="btn btn-primary">Baca Selengkapnya</a>
-                  </div>
-              </div>
-          </div>
       </div>
       <ul class="list-group" id="list-berita">
-        <li class="list-group-item">Berita 3</li>
-        <li class="list-group-item">Berita 4</li>
-        <li class="list-group-item">Berita 5</li>
-        <li class="list-group-item">Berita 6</li>
       </ul>
     </div>
   
     <!-- List Download Terbaru -->
-    <div class="mt-5" id="file">
+    <div class="mt-3" id="file">
       <h2>Download Terbaru</h2>
       <ul class="list-group" id="list-file">
-        <li class="list-group-item">Download 1</li>
-        <li class="list-group-item">Download 2</li>
       </ul>
     </div>
 
     <!-- Map Lokasi Kantor -->
-    <div class="mt-5">
-      <h2>Map Lokasi Kantor Kami</h2>
+    <div class="row mt-3">
+      <h2>Peta Lokasi</h2>
+      <div class="col-md-9" id="peta-lokasi" style="text-align:center;"></div>
+      <div class="col-md-3" id="visitor" style="text-align:center;"></div>
     </div>
 
-    <!-- Tentang Kami -->
-    <div class="mt-5">
-      <h2>Tentang Kami</h2>
-      <p>Tulis teks tentang perusahaan Anda di sini.</p>
-    </div>
   </div>
 @endsection
 
@@ -107,14 +85,22 @@
                 $('#card-pengumuman').html('');
                 response.forEach(function(konten, index) {
                   var thumbnail=(konten.thumbnail!==null)?konten.thumbnail:"{{ url('images/thumbnail.jpg') }}";
-                  var link='{{ url("read") }}'+'/'+konten.slug; 
-
+                  var link='{{ url("konten-read") }}'+'/'+konten.slug; 
+                  var statistik=`<span class="badge text-bg-info">
+                                      <i class="bi bi-view-list"></i> ${konten.jumlah_akses}  
+                                      <i class="bi bi-hand-thumbs-up"></i> ${konten.likedislike_count}  
+                                      <i class="bi bi-chat-right-text"></i> ${konten.komentar_count}
+                                  </span>`;
                   $('.row #card-pengumuman').append(`
                     <div class="col-md-${col_len}">
                       <div class="card mb-3">
                         <img src="${thumbnail}" class="card-img-top" alt="${konten.judul}">
                         <div class="card-body">
                           <h5 class="card-title">${konten.judul}</h5>
+                          <div>${konten.user.name} - ${konten.jeniskonten.nama}</div>
+                          <div class="font-12">${konten.waktu}</div>
+                          <div>${statistik}</div>
+
                           <p class="card-text">${konten.pembuka}</p>
                           <a href="${link}" class="btn btn-primary">Baca Selengkapnya</a>
                         </div>
@@ -143,7 +129,14 @@
                 $('#list-berita').html('');
                 response.forEach(function(konten, index) {
                   var thumbnail=(konten.thumbnail!==null)?konten.thumbnail:"{{ url('images/thumbnail.jpg') }}";
-                  var link='{{ url("read") }}'+'/'+konten.slug; 
+                  var link='{{ url("konten-read") }}'+'/'+konten.slug; 
+
+                  var statistik=`<span class="badge text-bg-info">
+                                      <i class="bi bi-view-list"></i> ${konten.jumlah_akses}  
+                                      <i class="bi bi-hand-thumbs-up"></i> ${konten.likedislike_count}  
+                                      <i class="bi bi-chat-right-text"></i> ${konten.komentar_count}
+                                  </span>`;
+
                   if (index < 2) {
                     $('.row #card-berita').append(`
                       <div class="col-md-${col_len}">
@@ -151,13 +144,23 @@
                           <img src="${thumbnail}" class="card-img-top" alt="${konten.judul}">
                           <div class="card-body">
                             <h5 class="card-title">${konten.judul}</h5>
+                            <div>${konten.user.name} - ${konten.jeniskonten.nama}</div>
+                          <div class="font-12">${konten.waktu}</div>
+                          <div>${statistik}</div>
                             <p class="card-text">${konten.pembuka}</p>
                             <a href="${link}" class="btn btn-primary">Baca Selengkapnya</a>
                           </div>
                         </div>
                       </div>`);
                   } else {
-                    $('#list-berita').append(`<li class="list-group-item"><a href="${link}">${konten.judul}</a></li>`);
+                    $('#list-berita').append(`
+                      <li class="list-group-item">
+                        <img src="${thumbnail}" width="150px" style="float:left;margin:5px;">
+                        <a href="${link}">${konten.judul}</a>
+                        <div>${konten.user.name} - ${konten.jeniskonten.nama}</div>
+                        <div class="font-12">${konten.waktu}</div>
+                        <div>${statistik}</div>
+                      </li>`);
                   }
                 });  
               }          
@@ -167,6 +170,21 @@
             }
         });
       }  
+      
+      function tentangKami(){ 
+        $.ajax({
+            url: 'api/list-konten?slug=tentang-kami&is_web=1&publikasi=1&showall=1',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+              console.log(response);
+              $('#tentang-kami').html(response[0].isi);
+            },
+            error: function() {
+              console.log('berita tidak ditemukan!');
+            }
+        });
+      }        
       
       function file(){
         $.ajax({
@@ -178,10 +196,27 @@
                 $('#file').show();
                 $('#list-file').html('');
                 response.forEach(function(konten, index) {
-                  var link='{{ url("/") }}'+'/'+konten.path; 
-                    $('#list-file').append(`<li class="list-group-item"><a href="${link}" target="_blank">${konten.judul}</a></li>`);
+                  var linkfile='{{ url("/") }}'+'/'+konten.path;
+                  var link='{{ url("file-read") }}'+'/'+konten.slug; 
+
+                  var statistik=`<span class="badge text-bg-info">
+                                      <i class="bi bi-view-list"></i> ${konten.jumlah_akses}  
+                                      <i class="bi bi-hand-thumbs-up"></i> ${konten.likedislike_count}  
+                                      <i class="bi bi-chat-right-text"></i> ${konten.komentar_count}
+                                  </span>`;
+
+                  $('#list-file').append(`
+                    <li class="list-group-item">
+                      <a href="${link}">${konten.judul}</a>
+                      <div>${konten.user.name} - ${konten.jeniskonten.nama}</div>
+                      <div class="font-12">${konten.waktu}</div>
+                      <div>
+                        <a href="${linkfile}" target="_blank"><i class="bi bi-box-arrow-down"></i></a>
+                        ${statistik}
+                      </div>
+                    </li>`);
                 });  
-              }          
+              }         
             },
             error: function() {
               alert(jenis+' tidak ditemukan!');
@@ -190,9 +225,12 @@
       }      
 
       $(document).ready(function() {
-        berita();
         pengumuman();
+        tentangKami();
+        berita();
         file();
+        htmlCode('peta-lokasi','#peta-lokasi');
+        htmlCode('visitor','#visitor');
       });
     </script>
 @endsection

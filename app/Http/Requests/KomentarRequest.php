@@ -14,6 +14,7 @@ class KomentarRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'user_id' => 'nullable|integer',
             'nama' => 'required|string',
             'komentar' => 'required|string',
             'konten_id' => 'nullable|integer',
@@ -32,6 +33,7 @@ class KomentarRequest extends FormRequest
     public function attributes()
     {
         return [
+            'user_id' => 'user id',
             'nama' => 'nama',
             'komentar' => 'komentar',
             'konten_id' => 'konten artikel',

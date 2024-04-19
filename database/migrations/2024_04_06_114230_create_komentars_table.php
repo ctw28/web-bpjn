@@ -22,7 +22,7 @@ class CreateKomentarsTable extends Migration
             $table->foreign('konten_id')->references('id')->on('kontens')->cascadeOnDelete();
             $table->foreignId('file_id')->nullable();
             $table->foreign('file_id')->references('id')->on('files')->cascadeOnDelete();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();
         });

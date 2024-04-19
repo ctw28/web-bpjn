@@ -122,8 +122,13 @@ class WebAppController extends Controller
         return view('file_web', ['kategori' => $kategori]);
     }
 
-    public function read($slug)
+    public function kontenRead($slug)
     {
-        return view('read', ['slug' => $slug]);
+        return view('konten_read', ['slug' => $slug]);
+    }
+
+    public function fileRead($slug)
+    {
+        return view('file_read', ['slug' => $slug]);
     }
 }

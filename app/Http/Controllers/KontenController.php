@@ -12,7 +12,13 @@ class KontenController extends Controller
 {
     public function index(Request $request)
     {
-        $dataQuery = Konten::with(['jeniskonten', 'user', 'komentar', 'likedislike', 'publikasi.user'])->orderBy('updated_at', 'desc');
+        $dataQuery = Konten::with(['jeniskonten', 'user', 'publikasi.user'])
+            ->withCount([
+                'komentar' => function ($query) {
+                    $query->where('is_publikasi', 1);
+                },
+                'likedislike'
+            ])->orderBy('waktu', 'desc')->orderBy('judul', 'asc');
 
         if (!$request->filled('is_web')) {
             if (!is_admin(auth()->id()))
@@ -126,6 +132,20 @@ class KontenController extends Controller
         return response()->json($dataQuery, 200);
     }
 
+    public function updateJumlahAkses($id)
+    {
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataUpdate = [
+            'jumlah_akses' => $dataQuery->jumlah_akses + 1,
+        ];
+        $dataQuery->update($dataUpdate);
+        return response()->json($dataQuery, 200);
+    }
+
     public function destroy($id)
     {
         $dataQueryResponse = $this->show($id);
@@ -134,8 +154,8 @@ class KontenController extends Controller
         }
         $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
 
-        if (!empty($dataQuery->thumbnail) && File::exists($dataQuery->thumbnail)) {
-            File::delete($dataQuery->thumbnail);
+        if (!empty($dataQuery->thumbnail) && FileFacade::exists($dataQuery->thumbnail)) {
+            FileFacade::delete($dataQuery->thumbnail);
         }
         $dataQuery->delete();
 

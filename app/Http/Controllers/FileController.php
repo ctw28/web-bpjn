@@ -12,7 +12,14 @@ class FileController extends Controller
 {
     public function index(Request $request)
     {
-        $dataQuery = File::with(['user', 'komentar', 'likedislike', 'jeniskonten', 'publikasi.user'])->orderBy('updated_at', 'desc');
+        $dataQuery = File::with(['user', 'jeniskonten', 'publikasi.user'])
+            ->withCount([
+                'komentar' => function ($query) {
+                    $query->where('is_publikasi', 1);
+                },
+                'likedislike'
+            ])->orderBy('waktu', 'desc')->orderBy('judul', 'asc');
+
         if (!$request->filled('is_web')) {
             if (!is_admin(auth()->id()))
                 $dataQuery->where('user_id', auth()->id());
@@ -45,6 +52,10 @@ class FileController extends Controller
             }
         }
 
+        if ($request->filled('slug')) {
+            $dataQuery->where('slug', $request->slug);
+        }
+
         $startingNumber = 1;
         if ($request->filled('showall')) {
             $dataQuery = $dataQuery->get();
@@ -74,7 +85,7 @@ class FileController extends Controller
     public function store(FileRequest $request)
     {
         $storagePath = 'files/' . date('Y') . '/' . date('m');
-        $pathUpload = uploadFile($request, $storagePath);
+        $pathUpload = uploadFile($request, 'file', $storagePath);
         if ($pathUpload) {
             $request['path'] = $pathUpload;
         } else {
@@ -106,8 +117,13 @@ class FileController extends Controller
 
 
         if ($request->hasFile('file')) {
+            //hapus file lama
+            if (!empty($dataQuery->path) && FileFacade::exists($dataQuery->path)) {
+                FileFacade::delete($dataQuery->path);
+            }
+
             $storagePath = 'files/' . date('Y') . '/' . date('m');
-            $pathUpload = uploadFile($request, $storagePath);
+            $pathUpload = uploadFile($request, 'file',  $storagePath);
             if ($pathUpload) {
                 $request['path'] = $pathUpload;
             } else {
@@ -118,6 +134,21 @@ class FileController extends Controller
         $dataQuery->update($request->all());
         return response()->json($dataQuery, 200);
     }
+
+    public function updateJumlahAkses($id)
+    {
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataUpdate = [
+            'jumlah_akses' => $dataQuery->jumlah_akses + 1,
+        ];
+        $dataQuery->update($dataUpdate);
+        return response()->json($dataQuery, 200);
+    }
+
 
     public function destroy($id)
     {

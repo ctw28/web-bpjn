@@ -14,8 +14,8 @@ class ImageEditorController extends Controller
         ]);
 
         $storagePath = 'editor/images/' . date('Y') . '/' . date('m');
-        $path = uploadFile($request, $storagePath);
-
+        $path = uploadFile($request, 'file', $storagePath);
+        $path = url('/' . $path);
         return response()->json(['success' => 'Image uploaded successfully.', 'image' => $path]);
     }
 }

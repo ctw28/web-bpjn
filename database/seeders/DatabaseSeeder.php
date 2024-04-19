@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory;
+use App\Models\File;
 use App\Models\Grup;
 use App\Models\Menu;
 use App\Models\User;
-use App\Models\File;
 use App\Models\Konten;
 use App\Models\AturGrup;
+use App\Models\HtmlCode;
 use App\Models\Komentar;
 use App\Models\Publikasi;
 use App\Models\JenisKonten;
@@ -15,7 +17,6 @@ use App\Models\LikeDislike;
 use App\Models\PengaturanWeb;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Faker\Factory;
 // use Faker\Provider\File;
 
 class DatabaseSeeder extends Seeder
@@ -70,9 +71,9 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 1, 'urut' => 3, 'nama' => 'Publikasi'],
             ['user_id' => 1, 'urut' => 4, 'nama' => 'Login', 'url' => '/login'],
 
-            ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => 'read/visi-misi', 'endpoint' => 'api/read/visi-misi', 'menu_id' => 2],
-            ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => 'read/sejarah', 'endpoint' => 'api/read/sejarah', 'menu_id' => 2],
-            ['user_id' => 1, 'urut' => 3, 'nama' => 'Struktur Organisasi', 'url' => 'read/struktur-organisasi', 'endpoint' => 'api/read/struktur-organisasi', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => 'konten-read/visi-misi', 'endpoint' => 'api/konten-read/visi-misi', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => 'konten-read/sejarah', 'endpoint' => 'api/konten-read/sejarah', 'menu_id' => 2],
+            ['user_id' => 1, 'urut' => 3, 'nama' => 'Struktur Organisasi', 'url' => 'konten-read/struktur-organisasi', 'endpoint' => 'api/konten-read/struktur-organisasi', 'menu_id' => 2],
 
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Berita', 'url' => 'konten-web/berita', 'endpoint' => 'api/list-konten?jenis=berita&is_web=true&publikasi=1', 'menu_id' => 3],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Pengumuman', 'url' => 'konten-web/pengumuman', 'endpoint' => 'api/list-konten?jenis=pengumuman&is_web=true&publikasi=1',  'menu_id' => 3],
@@ -141,6 +142,7 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'visi-misi', 'judul' => 'Visi Misi Kantor', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Visi misi instansi ini adalah</p>'],
             ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'sejarah', 'judul' => 'Sejarah', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>sejarah instansi ini dimulai dari</p>'],
             ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'struktur-organisasi', 'judul' => 'Struktur Organisasi', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Struktur Organisasi berdasarkan peraturan yang berlaku sebagai berikut</p>'],
+            ['user_id' => 1, 'jenis_konten_id' => 1, 'slug' => 'tentang-kami', 'judul' => 'Tentang Kami', 'waktu' => date('Y-m-d H:i:s'), 'isi' => '<p>Kami adalah organisasi yang profesional di bidangnya dan terus berkembang setiap hari</p>'],
         ];
 
         foreach ($dtdef as $dt) {
@@ -162,7 +164,7 @@ class DatabaseSeeder extends Seeder
                 'jenis_konten_id' => 2,
                 'judul' => $judul,
                 'waktu' => $dt['waktu'],
-                'isi' => $factory->paragraph(2),
+                'isi' => $factory->paragraph(5),
                 'slug' => generateSlug($judul, $dt['waktu']),
             ]);
         }
@@ -175,7 +177,7 @@ class DatabaseSeeder extends Seeder
                 'jenis_konten_id' => 3,
                 'judul' => $judul,
                 'waktu' => $dt['waktu'],
-                'isi' => $factory->paragraph(2),
+                'isi' => $factory->paragraph(5),
                 'slug' => generateSlug($judul, $dt['waktu']),
             ]);
         }
@@ -189,7 +191,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
         //publikasi untuk pengumuman
-        for ($i = 13; $i <= 16; $i++)
+        for ($i = 13; $i <= 17; $i++)
             Publikasi::create([
                 'user_id' => 1,
                 'konten_id' => $i,
@@ -225,7 +227,7 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 1; $i < 15; $i++)
             LikeDislike::create([
-                'kategori' => 'KONTEN',
+                // 'kategori' => 'KONTEN',
                 'konten_id' => rand(1, 3),
             ]);
 
@@ -286,6 +288,22 @@ class DatabaseSeeder extends Seeder
             'nama' => 'pengunjung-' . $i,
             'komentar' => 'bagus file downloadnya, terima kasih',
             'file_id' => rand(1, 4),
+        ]);
+
+        //visitor counter
+        HtmlCode::create([
+            'user_id' => 1,
+            'judul' => 'Visitor Counter',
+            'slug' => 'visitor',
+            'code' => '<a href="https://info.flagcounter.com/8BOw"><img src="https://s11.flagcounter.com/count2/8BOw/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>',
+        ]);
+
+        //peta google
+        HtmlCode::create([
+            'user_id' => 1,
+            'judul' => 'Peta Lokasi',
+            'slug' => 'peta-lokasi',
+            'code' => '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3979.896963557375!2d122.4724253!3d-4.0414447!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d988c472863d8db%3A0x80e257d51fbd380d!2sInstitut%20Agama%20Islam%20Negeri%20(IAIN)%20Kendari!5e0!3m2!1sid!2sid!4v1713489377628!5m2!1sid!2sid" width="100%" height="350" style="border:1;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
         ]);
     }
 }

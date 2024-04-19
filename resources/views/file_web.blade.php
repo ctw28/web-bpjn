@@ -78,23 +78,26 @@ $(document).ready(function() {
                 dataList.empty();
 
                 $.each(response.data, function(index, dt) {
+                    var linkFile = base_url+'/'+dt.path;
+                    var link = base_url+'/file-read/'+dt.slug;
+
                     var hakakses='';
                                                 
                         dataList.append(`
                             <tr data-id="${dt.id}"> 
                                 <td>${dt.nomor}</td> 
                                 <td>
-                                    <h5>${dt.judul}</h5>
+                                    <h5><a href="${link}">${dt.judul}</a></h5>
                                     <div class='font-12'><i class="bi bi-calendar-event"></i> ${dt.waktu}</div>
                                     <div class='font-12'>${dt.slug}</div>
-                                    <a href='${dt.path}' target='_blank'><i class="bi bi-box-arrow-down"></i> Download File Dokumen</a>
+                                    <a href='${linkFile}' target='_blank'><i class="bi bi-box-arrow-down"></i></a>
                                 </td> 
                                 <td>${dt.user.name}</td> 
                                 <td>
                                     <span class="badge text-bg-info">
                                         <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                        <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike_count}  
+                                        <i class="bi bi-chat-right-text"></i> ${dt.komentar_count}
                                     </span>
                                 </td> 
                                 <td>${dt.waktu}</td> 

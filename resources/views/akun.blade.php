@@ -103,7 +103,7 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl='api/akun';
+    var vApiUrl=base_url+'/'+'api/akun';
     var vDataGrup=[];
 
     loadGrup();
@@ -111,7 +111,7 @@
 
     function loadGrup(){
         $.ajax({
-            url: 'api/grup?showall=true',
+            url: base_url+'/'+'api/grup?showall=true',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -290,7 +290,7 @@
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
-                url: 'api/atur-grup/' + id,
+                url: base_url+'/'+'api/atur-grup/' + id,
                 method: 'DELETE',
                 dataType: 'json',
                 success: function(response) {
@@ -354,7 +354,7 @@
         event.preventDefault(); 
         var selectedPage = $('.page-item.active .page-link').data('page');
         $.ajax({
-            url: 'api/atur-grup', 
+            url: base_url+'/'+'api/atur-grup', 
             method: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
