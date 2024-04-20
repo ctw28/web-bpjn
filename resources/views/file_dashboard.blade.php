@@ -114,7 +114,7 @@
     var vApiUrl=base_url+'/'+'api/file';
     var vDataGrup=[];
 
-    $(function(){
+    $(document).ready(function() {
         loadJenisKonten();
         loadData();
 

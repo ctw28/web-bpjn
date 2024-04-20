@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah" onclick="tambah()">Tambah</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah">Tambah</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh">Refresh</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" id="btn-paging">
                     Paging
@@ -61,7 +61,10 @@
 <script>
     var vApiUrl=base_url+'/'+'api/jenis-konten';
 
-    function tambah(){
+$(document).ready(function() {
+
+    // function tambah(){
+    $(document).on('click', '#tambah', function() {
         $('#data-list').prepend(`
             <tr data-id="">
                 <td></td>
@@ -78,14 +81,14 @@
                 <td></td>
                 <td>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success simpan-baris" onclick="simpanBaris(this)">Simpan</button>
-                        <button type="button" class="btn btn-warning batal-baris" onclick="batalBaris(this)">Batal</button>
+                        <button type="button" class="btn btn-success simpan-baris" >Simpan</button>
+                        <button type="button" class="btn btn-warning batal-baris" >Batal</button>
                     </div>
                 </td>
             </tr>
         `);
         resetNomorUrut();
-    }
+    });
 
     function resetNomorUrut() {
         var nomor=1;
@@ -95,13 +98,14 @@
         });
     }
 
-    function batalBaris(button) {
-        $(button).closest('tr').remove();
+    $(document).on('click', '.batal-baris', function() {
+        $(this).closest('tr').remove();
         resetNomorUrut();
-    }
+    });
 
-    function simpanBaris(button) {
-        var baris = $(button).closest('tr');
+    // function simpanBaris(button) {
+    $(document).on('click', '.simpan-baris', function() {
+        var baris = $(this).closest('tr');
         var postData = {
             nama: baris.find("input[name='nama[]']").val(),
             slug: baris.find("input[name='slug[]']").val(),
@@ -124,7 +128,7 @@
                 baris.find("td:eq(5)").text(response.user.name); 
                 baris.find("td:eq(6)").text(response.updated_at_format);
                 baris.find("td:eq(7)").html(`<div class="btn-group btn-group-sm" role="group">
-                                                <button type="button" class="btn btn-danger" onclick="hapusData(${response.id})">Hapus</button>
+                                                <button type="button" class="btn btn-danger hapusData" data-id="${response.id}">Hapus</button>
                                             </div>`);
 
 
@@ -136,7 +140,7 @@
                 alert('operasi gagal dilakukan!');
             }
         });
-    }
+    });
 
     var oldValue="";
     $('#data-list').on('dblclick', 'td', function() {        
@@ -233,7 +237,7 @@
                             <td>${dt.updated_at_format}</td> 
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-danger" onclick="hapusData(${dt.id})" >Hapus</button>
+                                    <button type="button" class="btn btn-danger hapusData" data-id="${dt.id})" >Hapus</button>
                                 </div>                                        
                             </td>
                         </tr>`);
@@ -265,7 +269,9 @@
         }
     })
 
-    function hapusData(id){
+    // function hapusData(id){
+    $(document).on('click', '.hapusData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -281,7 +287,9 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }
+    });
+
+});
 
 </script>
 @endsection

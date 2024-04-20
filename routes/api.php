@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
     Route::resource('komentar', KomentarController::class);
+    Route::resource('html-code', HtmlCodeController::class);
     Route::resource('slide-show', SlideShowController::class);
     Route::resource('kotak-saran', KotakSaranController::class);
 

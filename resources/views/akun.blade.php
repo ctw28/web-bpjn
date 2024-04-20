@@ -21,15 +21,15 @@
                     <form id="form">
                         <input type="hidden" name="id" id="id" >
                         <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Lengkap</label>
+                            <label for="name" class="form-label">Nama Lengkap</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="hp" class="form-label">Email</label>
+                            <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="hp" class="form-label">Password</label>
+                            <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password">
                         </div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -43,7 +43,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah" onclick="tambah()">Tambah</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah">Tambah</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh">Refresh</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" id="btn-paging">
                     Paging
@@ -106,6 +106,8 @@
     var vApiUrl=base_url+'/'+'api/akun';
     var vDataGrup=[];
 
+$(document).ready(function() {
+
     loadGrup();
     loadData();
 
@@ -139,7 +141,7 @@
                     if(dt.aturgrup.length>0){
                         hakakses='<ul>';
                         $.each(dt.aturgrup, function(index, dp) {
-                            hakakses=hakakses+`<li>${dp.grup.nama} <button type="button" class="btn btn-danger btn-vsm" onclick="hapusAkses(${dp.id})" >X</button></li>`;
+                            hakakses=hakakses+`<li>${dp.grup.nama} <button type="button" class="btn btn-danger btn-vsm hapusAkses" data-id="${dp.id}" >X</button></li>`;
                         });
                         hakakses=hakakses+'</ul>';
                     }
@@ -151,9 +153,9 @@
                             <td>${dt.updated_at_format}</td> 
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-primary" onclick="gantiData(${dt.id})" >Ganti</button>
-                                    <button type="button" class="btn btn-warning" onclick="setAkses(${dt.id})" >Akses</button>
-                                    <button type="button" class="btn btn-danger" onclick="hapusData(${dt.id})" >Hapus</button>
+                                    <button type="button" class="btn btn-primary gantiData" data-id="${dt.id}" >Ganti</button>
+                                    <button type="button" class="btn btn-warning setAkses" data-id="${dt.id}" >Akses</button>
+                                    <button type="button" class="btn btn-danger hapusData" data-id="${dt.id}" >Hapus</button>
                                 </div>                                        
                             </td>
                         </tr>`);
@@ -173,12 +175,12 @@
         $('#form')[0].reset();
     }
 
-    function tambah(){
+    $("#tambah").on("click", function() {
         $('html, body').scrollTop($('#tambahForm').offset().top);
         $('#bodyAcr').collapse('show'); // Menampilkan accordion
         resetForm();
         $('#name').focus();
-    }
+    });
 
     function batal(event) {
         event.preventDefault();
@@ -250,7 +252,9 @@
         }
     });        
 
-    function gantiData(id){
+    //ganti
+    $(document).on('click', '.gantiData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         $.ajax({
             url: vApiUrl+'/' + id,
@@ -267,9 +271,11 @@
                 alert('operasi gagal dilakukan!');
             }
         });                
-    }
+    });
 
-    function hapusData(id){
+    //hapus
+    $(document).on('click', '.hapusData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -284,9 +290,11 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }
+    });
 
-    function hapusAkses(id){
+    // function hapusAkses(id){
+    $(document).on('click', '.hapusAkses', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -301,9 +309,11 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }
+    });
 
-    function setAkses(id){
+    // function setAkses(id){
+    $(document).on('click', '.setAkses', function() {
+        var id=$(this).data('id');
         $('#checkboxContainer').html('');
         $('#formAkses #user_id').val(id);
         $.ajax({
@@ -312,7 +322,6 @@
             dataType: 'json',
             success: function(response) {
                 var aksesGrup = response.aturgrup;
-                var showModal = false;
                 $.each(vDataGrup, function(index, dt) {
                     var idFound = false;
                     $.each(aksesGrup, function(index, grup) {
@@ -335,20 +344,16 @@
                     }
                 });
 
-                if(showModal){
-                    var fModalForm = new bootstrap.Modal(document.getElementById('modalForm'), {
-                        keyboard: false
-                    });       
-                    fModalForm.show();
-                }else{
-                    toastr.success('semua akses sudah ada!', 'pemberitahuan');
-                }
+                var fModalForm = new bootstrap.Modal(document.getElementById('modalForm'), {
+                    keyboard: false
+                });       
+                fModalForm.show();
             },
             error: function() {
                 alert('operasi gagal dilakukan!');
             }
         });                
-    }
+    });
 
     $('#formAkses').submit(function(event) {
         event.preventDefault(); 
@@ -360,7 +365,7 @@
             dataType: 'json',
             success: function(response) {
                 loadData(selectedPage);
-                toastr.success('operasi berhasil dilakukan!', 'berhasil');
+                toastr.success('set akses akun berhasil dilakukan!', 'berhasil');
             },
             error: function(xhr, status, error) {
                 alert('operasi gagal dilakukan!');
@@ -368,5 +373,6 @@
         });
     });    
 
+}); 
 </script>
 @endsection

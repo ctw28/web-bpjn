@@ -127,8 +127,9 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl=base_url+'/'+'api/pengaturan-web';
+var vApiUrl=base_url+'/'+'api/pengaturan-web';
 
+$(document).ready(function() {
     loadData();
     function loadData() {
         $.ajax({
@@ -234,5 +235,6 @@
             });
         }
     });
+});
 </script>
 @endsection

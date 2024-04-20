@@ -122,7 +122,6 @@
 
 @section('script')
 
-<script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/pagination.js') }}"></script>
 <script src="{{ asset('js/token.js') }}"></script>
 

@@ -72,7 +72,6 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/myapp.js') }}"></script>
     <script>
       function pengumuman(){ 
         $.ajax({

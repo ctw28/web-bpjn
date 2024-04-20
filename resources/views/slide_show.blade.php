@@ -1,7 +1,7 @@
 @extends('template_dashboard')
 
 @section('head')
-    <title>SLide Show</title>
+    <title>Slide Show Web</title>
 @endsection
 
 @section('container')
@@ -45,7 +45,7 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                <button type="button" class="btn btn-warning" onclick="batal(event)">Batal</button>
+                                <button type="button" class="btn btn-warning batal">Batal</button>
                             </div>
                         </div>
                     </form>
@@ -57,7 +57,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="input-group justify-content-end">
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah" onclick="tambah()">Tambah</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="tambah">Tambah</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh">Refresh</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" id="btn-paging">
                     Paging
@@ -94,13 +94,13 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/pagination.js') }}"></script>
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl=base_url+'/'+'api/slide-show';
-    var vDataGrup=[];
+var vApiUrl=base_url+'/'+'api/slide-show';
+var vDataGrup=[];
+$(document).ready(function() {
 
     loadData();
 
@@ -129,8 +129,8 @@
                             <td>${publikasi}</td> 
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-primary" onclick="gantiData(${dt.id})" >Ganti</button>
-                                    <button type="button" class="btn btn-danger" onclick="hapusData(${dt.id})" >Hapus</button>
+                                    <button type="button" class="btn btn-primary gantiData" data-id="${dt.id}">Ganti</button>
+                                    <button type="button" class="btn btn-danger hapusData" data-id="${dt.id}">Hapus</button>
                                 </div>
                             </td>
                         </tr>`);
@@ -150,18 +150,18 @@
         $('#form')[0].reset();
     }
 
-    function tambah(){
+    $(document).on('click', '#tambah', function() {
         $('html, body').scrollTop($('#tambahForm').offset().top);
         $('#bodyAcr').collapse('show'); // Menampilkan accordion
         resetForm();
         $('#judul').focus();
-    }
+    });
 
-    function batal(event) {
+    $(document).on('click', '.batal', function(event) {
         event.preventDefault();
         resetForm();
         $('#bodyAcr').collapse('hide'); 
-    }
+    });
 
     // Handle page change
     $(document).on('click', '.page-link', function() {
@@ -226,7 +226,8 @@
         }
     });        
 
-    function gantiData(id){
+    $(document).on('click', '.gantiData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         $.ajax({
             url: vApiUrl+'/' + id,
@@ -244,9 +245,10 @@
                 alert('operasi gagal dilakukan!');
             }
         });                
-    }
+    });
 
-    function hapusData(id){
+    $(document).on('click', '.hapusData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -261,7 +263,7 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }
-
+    });
+});
 </script>
 @endsection

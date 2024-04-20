@@ -47,13 +47,13 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/pagination.js') }}"></script>
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl=base_url+'/'+'api/kotak-saran';
-    var vDataGrup=[];
+var vApiUrl=base_url+'/'+'api/kotak-saran';
+var vDataGrup=[];
+$(document).ready(function() {
 
     loadData();
 
@@ -82,7 +82,7 @@
                                 </div>
                             </td> 
                             <td>
-                                <button type="button" class="btn btn-danger" onclick="hapusData(${dt.id})" >Hapus</button>
+                                <button type="button" class="btn btn-danger hapusData" data-id="${dt.id}" >Hapus</button>
                             </td>
                         </tr>`);
                 });
@@ -118,7 +118,9 @@
         loadData();
     })
 
-    function hapusData(id){
+    // function hapusData(id){
+    $(document).on('click', '.hapusData', function() {
+        var id=$(this).data('id');
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -133,7 +135,8 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }
+    });
+});                
 
 </script>
 @endsection

@@ -45,9 +45,9 @@
         </div>
         <div class="col-sm-3">
             <div class="input-group justify-content-end">
-                <button type="submit" class="btn btn-sm btn-outline-secondary" id="simpan">Simpan</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetForm()">Batal</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refresh()">Refresh</button>
+                <button type="submit" class="btn btn-sm btn-outline-secondary simpan">Simpan</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary resetForm">Batal</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary refreshForm">Refresh</button>
             </div>
         </div>
     </form>
@@ -61,11 +61,12 @@
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('plugins/select2-to-tree/src/select2totree.js') }}"></script>
-<script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl=base_url+'/'+'api/menu';
+var vApiUrl=base_url+'/'+'api/menu';
+
+$(document).ready(function() {
 
     loadTreeMenu();
     loadData();
@@ -74,13 +75,17 @@
         $('#form input').val('');
         $('#form')[0].reset();
         $('#menu_id').val(0).trigger('change');
-    }    
+    }
+
+    $(document).on('click', '.resetForm', function() {
+        resetForm();    
+    });    
 
     function buildMenuTree(data, parentId) {
         var result = "<ul>";
         for (var i = 0; i < data.length; i++) {
             if (data[i].menu_id == parentId) {
-                result += `<li ondblclick="ganti(${data[i].id},event)" data-urut="${data[i].urut}">${data[i].nama} <span class="font-12">${myLabel(data[i].url)}</span> <button type="button" class="btn btn-vsm btn-danger" onclick="hapusData(${data[i].id})">x</button>`;
+                result += `<li class="gantiData" data-id="${data[i].id}" data-urut="${data[i].urut}">${data[i].nama} <span class="font-12">${myLabel(data[i].url)}</span> <button type="button" class="btn btn-vsm btn-danger hapusData" data-id="${data[i].id}">x</button>`;
                 result += buildMenuTree(data, data[i].id);
                 result += "</li>";
             }
@@ -120,14 +125,19 @@
         });
     }
 
-    function refresh() {
+    function refresh(){
         loadTreeMenu();
         loadData();
         resetForm();
     };
 
-    function ganti(id,event) {
+    $(document).on('click', '.refreshForm', function(event) {
+        loadData();
+    });
+
+    $(document).on('dblclick', '.gantiData', function(event) {
         event.stopPropagation();
+        var id=$(this).data('id');
         var menu_id = 0;
         $.ajax({
             url: vApiUrl+'/' + id,
@@ -145,7 +155,7 @@
                 alert('operasi gagal dilakukan!');
             }
         });
-    }    
+    });
 
     $("#form").validate({
         submitHandler: function(form) {
@@ -173,7 +183,11 @@
         }
     });       
     
-    function hapusData(id){
+    // function hapusData(id){
+    $(document).on('click', '.hapusData', function(event) {
+        event.stopPropagation();
+        var id=$(this).data('id');
+
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -189,6 +203,8 @@
                     alert('operasi gagal dilakukan!');
                 }
             });                
-    }    
+    });
+});                
+
 </script>
 @endsection

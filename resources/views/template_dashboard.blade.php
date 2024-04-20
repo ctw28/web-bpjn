@@ -76,6 +76,8 @@
 
     <!-- Footer -->
     @include('partials_footer')
+    <script src="{{ asset('js/myapp.js') }}"></script>
+
     {{-- <script src="{{ asset('js/loading.js') }}"></script>     --}}
     @yield('script')
 

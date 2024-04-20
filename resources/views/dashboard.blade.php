@@ -6,8 +6,8 @@
 
 @section('container')
 
-    <h1>Content</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fermentum varius metus, eu suscipit diam finibus in. Duis pharetra eros in ex suscipit, id malesuada est vestibulum.</p>
+    <h1>Selamat Datang</h1>
+    <p>Selamat datang dihalaman dashboard website</p>
 
 @endsection
 

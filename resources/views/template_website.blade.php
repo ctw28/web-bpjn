@@ -31,6 +31,7 @@
 
     <!-- Footer -->
   @include('partials_footer')
+  <script src="{{ asset('js/myapp.js') }}"></script>
   <script>
     function getMenuWeb() {
         $.ajax({

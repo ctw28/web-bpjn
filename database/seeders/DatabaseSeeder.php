@@ -338,7 +338,7 @@ class DatabaseSeeder extends Seeder
         //untuk file
         $dtdef = [
             ['user_id' => 1,  'judul' => 'Pelaksanaan Sosialisasi', 'path' => 'slideshows/1.jpg'],
-            ['user_id' => 1,  'judul' => 'Selamat Hari Raya Idul Fitri', 'path' => 'slideshows/2.jpeg'],
+            ['user_id' => 1,  'judul' => 'Selamat Hari Raya Idul Fitri', 'path' => 'slideshows/2.jpg'],
             ['user_id' => 1,  'judul' => 'Selamat Berpuasa di Bulan Ramadhan', 'path' => 'slideshows/3.jpg'],
         ];
 
