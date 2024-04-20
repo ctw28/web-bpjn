@@ -119,9 +119,10 @@ if (!function_exists('uploadFile')) {
             File::makeDirectory(public_path($storagePath), 0755, true);
         }
 
-        $fileName = $fileName . "." . $uploadedFile->getClientOriginalExtension();
         if (!$fileName)
             $fileName = generateUniqueFileName();
+        else
+            $fileName = $fileName . "." . $uploadedFile->getClientOriginalExtension();
 
         $uploadedFile->move(public_path($storagePath), $fileName);
         $fileFullPath = public_path($storagePath . '/' . $fileName);

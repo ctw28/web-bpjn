@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SlideShow;
 use App\Models\LikeDislike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\HtmlCodeController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\PublikasiController;
+use App\Http\Controllers\SlideShowController;
 use App\Http\Controllers\ImageEditorController;
 use App\Http\Controllers\JenisKontenController;
 use App\Http\Controllers\LikeDislikeController;
@@ -46,6 +48,7 @@ Route::get('/update-jumlah-akses-konten/{id}', [KontenController::class, 'update
 Route::get('/update-jumlah-akses-file/{id}', [FileController::class, 'updateJumlahAkses']);
 
 Route::get('/get-html-code', [HtmlCodeController::class, 'index']);
+Route::get('/get-slide-show', [SlideShowController::class, 'index']);
 
 Route::get('/like', [LikeDislikeController::class, 'index']);
 Route::post('/like', [LikeDislikeController::class, 'store']);
@@ -57,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
     Route::resource('komentar', KomentarController::class);
+    Route::resource('html-code', HtmlCodeController::class);
+    Route::resource('slide-show', SlideShowController::class);
 
     Route::middleware(['is.admin'])->group(function () {
         Route::resource('menu', MenuController::class);

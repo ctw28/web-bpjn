@@ -111,4 +111,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(HtmlCode::class);
     }
+
+    public function slideshow()
+    {
+        return $this->hasMany(SlideShow::class);
+    }
 }

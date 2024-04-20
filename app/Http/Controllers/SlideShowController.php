@@ -2,24 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Konten;
+use App\Models\SlideShow;
 use Illuminate\Http\Request;
-use App\Http\Requests\KontenRequest;
+use App\Http\Requests\SlideShowRequest;
 use Illuminate\Support\Facades\File as FileFacade;
-use Illuminate\Support\Facades\Storage;
 
-class KontenController extends Controller
+
+class SlideShowController extends Controller
 {
     public function index(Request $request)
     {
-        $dataQuery = Konten::with(['jeniskonten', 'user', 'publikasi.user'])
-            ->withCount([
-                'komentar' => function ($query) {
-                    $query->where('is_publikasi', 1);
-                },
-                'likedislike'
-            ])->orderBy('waktu', 'desc')->orderBy('judul', 'asc');
-
+        $dataQuery = SlideShow::with(['user'])->orderBy('updated_at', 'desc')->orderBy('judul', 'asc');
         if (!$request->filled('is_web')) {
             if (!is_admin(auth()->id()))
                 $dataQuery->where('user_id', auth()->id());
@@ -27,34 +20,18 @@ class KontenController extends Controller
 
         if ($request->filled('search')) {
             $dataQuery->where('judul', 'like', '%' . $request->search . '%')
-                ->orWhere('slug', 'like', '%' . $request->search . '%'); //slug pada konten
-        }
-
-        if ($request->filled('jenis')) {
-            $jenis = $request->jenis;
-            $dataQuery->whereHas('jeniskonten', function ($q) use ($jenis) {
-                //slug pada jenis konten
-                $q->where('slug', $jenis);
-            });
+                ->orWhere('deskripsi', 'like', '%' . $request->search . '%'); //slug pada SlideShow
         }
 
         if ($request->filled('publikasi')) {
             $publikasiValue = $request->publikasi;
             if ($publikasiValue == 1) {
-                $dataQuery->whereHas('publikasi', function ($q) {
-                    $q->where('is_publikasi', 1);
-                });
+                $dataQuery->where('is_publikasi', 1);
             } elseif ($publikasiValue == 0) {
-                $dataQuery->whereHas('publikasi', function ($q) {
-                    $q->where('is_publikasi', 0);
-                });
+                $dataQuery->where('is_publikasi', 0);
             } elseif ($publikasiValue == 2) {
-                $dataQuery->whereDoesntHave('publikasi');
+                $dataQuery->whereNull('is_publikasi');
             }
-        }
-
-        if ($request->filled('slug')) {
-            $dataQuery->where('slug', $request->slug);
         }
 
         $startingNumber = 1;
@@ -84,32 +61,31 @@ class KontenController extends Controller
         return response()->json($dataQuery);
     }
 
-    public function store(KontenRequest $request)
+    public function store(SlideShowRequest $request)
     {
-        $storagePath = 'kontens/' . date('Y') . '/' . date('m');
+        $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
         $pathUpload = uploadFile($request, 'file', $storagePath);
         if ($pathUpload) {
-            $request['thumbnail'] = $pathUpload;
+            $request['path'] = $pathUpload;
         } else {
             return response()->json(['message' => 'Gagal mengunggah file'], 500);
         }
 
-        $dataSave = Konten::create($request->all());
-        $dataQuery = Konten::where('id', $dataSave->id)->first();
+        $dataQuery = SlideShow::create($request->all());
         $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
         return response()->json($dataQuery, 201);
     }
 
     public function show($id)
     {
-        $dataQuery = Konten::with(['jeniskonten', 'user', 'komentar', 'likedislike', 'publikasi.user'])->find($id);
+        $dataQuery = SlideShow::with(['user'])->find($id);
         if (!$dataQuery) {
             return response()->json(['message' => 'data tidak ditemukan'], 404);
         }
         return response()->json($dataQuery);
     }
 
-    public function update(KontenRequest $request, $id)
+    public function update(SlideShowRequest $request, $id)
     {
         $dataQueryResponse = $this->show($id);
         if ($dataQueryResponse->getStatusCode() === 404) {
@@ -119,34 +95,20 @@ class KontenController extends Controller
 
 
         if ($request->has('file')) {
-            if (!empty($dataQuery->thumbnail) && FileFacade::exists($dataQuery->thumbnail)) {
-                FileFacade::delete($dataQuery->thumbnail);
+            if (!empty($dataQuery->path) && FileFacade::exists($dataQuery->path)) {
+                FileFacade::delete($dataQuery->path);
             }
 
-            $storagePath = 'kontens/' . date('Y') . '/' . date('m');
+            $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
             $pathUpload = uploadFile($request, 'file', $storagePath);
             if ($pathUpload) {
-                $request['thumbnail'] = $pathUpload;
+                $request['path'] = $pathUpload;
             } else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
             }
         }
 
         $dataQuery->update($request->all());
-        return response()->json($dataQuery, 200);
-    }
-
-    public function updateJumlahAkses($id)
-    {
-        $dataQueryResponse = $this->show($id);
-        if ($dataQueryResponse->getStatusCode() === 404) {
-            return $dataQueryResponse;
-        }
-        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
-        $dataUpdate = [
-            'jumlah_akses' => $dataQuery->jumlah_akses + 1,
-        ];
-        $dataQuery->update($dataUpdate);
         return response()->json($dataQuery, 200);
     }
 
@@ -158,8 +120,8 @@ class KontenController extends Controller
         }
         $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
 
-        if (!empty($dataQuery->thumbnail) && FileFacade::exists($dataQuery->thumbnail)) {
-            FileFacade::delete($dataQuery->thumbnail);
+        if (!empty($dataQuery->path) && FileFacade::exists($dataQuery->path)) {
+            FileFacade::delete($dataQuery->path);
         }
         $dataQuery->delete();
 

@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pengaturan-web', [WebAppController::class, 'pengaturanWeb'])->name('pengaturan-web');
     Route::get('/akun', [WebAppController::class, 'akun'])->name('akun');
     Route::get('/menu', [WebAppController::class, 'menu'])->name('menu');
+    Route::get('/html-code', [WebAppController::class, 'htmlCode'])->name('html-code');
+    Route::get('/slide-show', [WebAppController::class, 'slideShow'])->name('slide-show');
     Route::get('/konten-dashboard', [WebAppController::class, 'kontenDashboard'])->name('konten-dashboard');
     Route::get('/file-dashboard', [WebAppController::class, 'fileDashboard'])->name('file-dashboard');
     Route::get('/verifikasi-konten', [WebAppController::class, 'verifikasiKonten'])->name('verifikasi-konten');

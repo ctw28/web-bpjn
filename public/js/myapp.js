@@ -77,6 +77,33 @@ function htmlCode(slug,element) {
     });
 }
 
+function slideShow(element) {
+    $.ajax({
+        url: base_url+'/api/get-slide-show?is_web=true&showall=true',
+        type: 'get',
+        dataType: 'json',
+        success: function(response) {
+            if(response.length > 0) {
+                var carouselInner = $(element).find('.carousel-inner');
+                carouselInner.empty(); 
+                $.each(response, function(index, slide) {
+                    var vClass = index === 0 ? 'carousel-item active' : 'carousel-item'; 
+                    var path = `<img src="${slide.path}" class="d-block w-100" style="height: 450px; width: 100%;" alt="${slide.title}">`;
+                    // var judul = `<h4>${slide.judul}</h4>`;
+                    // var deskripsi = `<p>${myLabel(slide.deskripsi)}</p>`;
+                    // var captionElement = `<div class="carousel-caption">${judul}${deskripsi}</div>`;
+                    // var item = `<div class="${vClass}">${path}${captionElement}</div>`;
+                    var item = `<div class="${vClass}">${path}</div>`;
+                    carouselInner.append(item);
+                });
+            }        
+        },
+        error: function(error) {
+            console.error(error);
+        }
+    });
+}
+
 $(document).ready(function() {
     var pengaturanWeb = getPengaturanWeb();
     if (!pengaturanWeb) {
@@ -84,4 +111,9 @@ $(document).ready(function() {
     } else {
         sesuaikanPengaturan();
     }
+
+    $('.custom-code-html').each(function() {
+        var slug = $(this).data('slug');
+        htmlCode(slug, this);
+    });    
 });

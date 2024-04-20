@@ -102,6 +102,11 @@ class WebAppController extends Controller
         return view('verifikasi_komentar');
     }
 
+    public function htmlCode()
+    {
+        return view('html_code');
+    }
+
     public function login()
     {
         return view('auth');
@@ -110,6 +115,11 @@ class WebAppController extends Controller
     public function web()
     {
         return view('website');
+    }
+
+    public function slideShow()
+    {
+        return view('slide_show');
     }
 
     public function kontenWeb($kategori)

@@ -31,7 +31,8 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{{ route('konten-dashboard') }}">Artikel</a></li>
               <li><a class="dropdown-item" href="{{ route('file-dashboard') }}">File</a></li>
-              <li><a class="dropdown-item" href="#">Html Code Embed</a></li>
+              <li><a class="dropdown-item" href="{{ route('html-code') }}">Html Code</a></li>
+              <li><a class="dropdown-item" href="{{ route('slide-show') }}">Slide Show</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">

@@ -8,23 +8,23 @@
 
 <!-- Konten Utama -->
 <div class="container mt-10">
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div id="slideWeb" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="{{ url('images/1.jpg') }}" class="d-block w-100" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="{{ url('images/2.jpeg') }}" class="d-block w-100" alt="...">
+          <img src="{{ url('images/2.jpg') }}" class="d-block w-100" alt="...">
         </div>
         <div class="carousel-item">
             <img src="{{ url('images/3.jpg') }}" class="d-block w-100" alt="...">
           </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#slideWeb" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#slideWeb" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
@@ -61,9 +61,11 @@
 
     <!-- Map Lokasi Kantor -->
     <div class="row mt-3">
-      <h2>Peta Lokasi</h2>
-      <div class="col-md-9" id="peta-lokasi" style="text-align:center;"></div>
-      <div class="col-md-3" id="visitor" style="text-align:center;"></div>
+      <div class="col-md-9 custom-code-html" data-slug="peta-lokasi"></div>
+      <div class="col-md-3"> 
+        <div class="custom-code-html" data-slug="visitor"></div>
+        <div class="custom-code-html" data-slug="link-terkait"></div>
+    </div>
     </div>
 
   </div>
@@ -229,8 +231,9 @@
         tentangKami();
         berita();
         file();
-        htmlCode('peta-lokasi','#peta-lokasi');
-        htmlCode('visitor','#visitor');
+        // htmlCode('peta-lokasi','#peta-lokasi');
+        // htmlCode('visitor','#visitor');
+        slideShow('#slideWeb');
       });
     </script>
 @endsection

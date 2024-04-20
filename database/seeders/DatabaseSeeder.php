@@ -15,6 +15,7 @@ use App\Models\Publikasi;
 use App\Models\JenisKonten;
 use App\Models\LikeDislike;
 use App\Models\PengaturanWeb;
+use App\Models\SlideShow;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 // use Faker\Provider\File;
@@ -295,7 +296,13 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
             'judul' => 'Visitor Counter',
             'slug' => 'visitor',
-            'code' => '<a href="https://info.flagcounter.com/8BOw"><img src="https://s11.flagcounter.com/count2/8BOw/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>',
+            'code' => ' <div class="mb-3">
+                            <h5>Visitor Counter</h5>
+                            <hr>
+                            <div style="text-align:center;">
+                                <a href="https://info.flagcounter.com/8BOw"><img src="https://s11.flagcounter.com/count2/8BOw/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
+                            </div>
+                        </div>',
         ]);
 
         //peta google
@@ -303,7 +310,43 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
             'judul' => 'Peta Lokasi',
             'slug' => 'peta-lokasi',
-            'code' => '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3979.896963557375!2d122.4724253!3d-4.0414447!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d988c472863d8db%3A0x80e257d51fbd380d!2sInstitut%20Agama%20Islam%20Negeri%20(IAIN)%20Kendari!5e0!3m2!1sid!2sid!4v1713489377628!5m2!1sid!2sid" width="100%" height="350" style="border:1;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+            'code' => ' <div class="mb-3">
+                            <h5>Lokasi Kami</h5>
+                            <hr>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7959.793924170087!2d122.475!3d-4.041445!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d988c472863d8db%3A0x80e257d51fbd380d!2sInstitut%20Agama%20Islam%20Negeri%20(IAIN)%20Kendari!5e0!3m2!1sid!2sid!4v1713571268614!5m2!1sid!2sid" width="600" height="400" style="border:1;width:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>                        
+                        </div>',
         ]);
+
+        //plink terkait
+        HtmlCode::create([
+            'user_id' => 1,
+            'judul' => 'Link Terkait',
+            'slug' => 'link-terkait',
+            'code' => ' <div class="mb-3">
+                            <h5>Link Terkait</h5>
+                            <hr>
+                            <ul>
+                                <li><a href="https://iainkendari.ac.id" target="_blank">IAIN Kendari</li>
+                                <li><a href="https://sia.iainkendari.ac.id" target="_blank">Sistem Informasi Akademik</li>
+                                <li><a href="https://simpeg.iainkendari.ac.id" target="_blank">SIMPEG</li>
+                            </ul>
+                        </div>',
+        ]);
+
+        //untuk file
+        $dtdef = [
+            ['user_id' => 1,  'judul' => 'Pelaksanaan Sosialisasi', 'path' => 'slideshows/1.jpg'],
+            ['user_id' => 1,  'judul' => 'Selamat Hari Raya Idul Fitri', 'path' => 'slideshows/2.jpeg'],
+            ['user_id' => 1,  'judul' => 'Selamat Berpuasa di Bulan Ramadhan', 'path' => 'slideshows/3.jpg'],
+        ];
+
+        foreach ($dtdef as $i => $dt) {
+            SlideShow::create([
+                'user_id' => $dt['user_id'],
+                'judul' => $dt['judul'],
+                'path' => $dt['path'],
+                'is_publikasi' => 1,
+            ]);
+        }
     }
 }
