@@ -16,6 +16,7 @@ use App\Http\Controllers\HtmlCodeController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\PublikasiController;
 use App\Http\Controllers\SlideShowController;
+use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\ImageEditorController;
 use App\Http\Controllers\JenisKontenController;
 use App\Http\Controllers\LikeDislikeController;
@@ -34,6 +35,8 @@ use App\Http\Controllers\PengaturanWebController;
 
 Route::post('/auth-cek', [AuthController::class, 'index']);
 Route::post('/simpan-komentar', [KomentarController::class, 'store']);
+
+Route::post('/simpan-kotak-saran', [KotakSaranController::class, 'store']);
 
 Route::get('/info-web', [PengaturanWebController::class, 'index']);
 Route::get('/load-menu-tree', [MenuController::class, 'getMenu']);
@@ -60,8 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
     Route::resource('komentar', KomentarController::class);
-    Route::resource('html-code', HtmlCodeController::class);
     Route::resource('slide-show', SlideShowController::class);
+    Route::resource('kotak-saran', KotakSaranController::class);
 
     Route::middleware(['is.admin'])->group(function () {
         Route::resource('menu', MenuController::class);

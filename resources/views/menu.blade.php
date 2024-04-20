@@ -61,6 +61,7 @@
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('plugins/select2-to-tree/src/select2totree.js') }}"></script>
+<script src="{{ asset('js/myapp.js') }}"></script>
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
@@ -79,7 +80,7 @@
         var result = "<ul>";
         for (var i = 0; i < data.length; i++) {
             if (data[i].menu_id == parentId) {
-                result += `<li ondblclick="ganti(${data[i].id},event)" data-urut="${data[i].urut}">${data[i].nama} <span class="font-12">${data[i].url}</span> <button type="button" class="btn btn-vsm btn-danger" onclick="hapusData(${data[i].id})">x</button>`;
+                result += `<li ondblclick="ganti(${data[i].id},event)" data-urut="${data[i].urut}">${data[i].nama} <span class="font-12">${myLabel(data[i].url)}</span> <button type="button" class="btn btn-vsm btn-danger" onclick="hapusData(${data[i].id})">x</button>`;
                 result += buildMenuTree(data, data[i].id);
                 result += "</li>";
             }

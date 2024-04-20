@@ -43,6 +43,7 @@ class KomentarController extends Controller
 
         $dataQuery->transform(function ($item) use (&$startingNumber) {
             $item->setAttribute('nomor', $startingNumber++);
+            $item->setAttribute('komentar', htmlspecialchars($item->komentar));
             $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
             return $item;
         });

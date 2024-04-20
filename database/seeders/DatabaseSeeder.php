@@ -13,6 +13,7 @@ use App\Models\HtmlCode;
 use App\Models\Komentar;
 use App\Models\Publikasi;
 use App\Models\JenisKonten;
+use App\Models\KotakSaran;
 use App\Models\LikeDislike;
 use App\Models\PengaturanWeb;
 use App\Models\SlideShow;
@@ -70,7 +71,8 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Halaman Depan', 'url' => '/'],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Profil'],
             ['user_id' => 1, 'urut' => 3, 'nama' => 'Publikasi'],
-            ['user_id' => 1, 'urut' => 4, 'nama' => 'Login', 'url' => '/login'],
+            ['user_id' => 1, 'urut' => 4, 'nama' => 'Kotak Saran', 'url' => '/kotak-saran-web'],
+            ['user_id' => 1, 'urut' => 5, 'nama' => 'Login', 'url' => '/login'],
 
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Visi Misi', 'url' => 'konten-read/visi-misi', 'endpoint' => 'api/konten-read/visi-misi', 'menu_id' => 2],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Sejarah', 'url' => 'konten-read/sejarah', 'endpoint' => 'api/konten-read/sejarah', 'menu_id' => 2],
@@ -348,5 +350,10 @@ class DatabaseSeeder extends Seeder
                 'is_publikasi' => 1,
             ]);
         }
+
+        KotakSaran::create([
+            'nama' => "Al Fath",
+            'komentar' => "kalau bisa beritanya kasi menarik ",
+        ]);
     }
 }

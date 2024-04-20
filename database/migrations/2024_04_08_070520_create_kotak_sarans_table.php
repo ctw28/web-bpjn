@@ -15,11 +15,11 @@ class CreateKotakSaransTable extends Migration
     {
         Schema::create('kotak_sarans', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_publikasi');
+            // $table->boolean('is_publikasi');
             $table->string('nama');
             $table->text('komentar');
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
+            // $table->foreignId('user_id');
+            // $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();
         });
     }

@@ -43,7 +43,7 @@
               <li><a class="dropdown-item" href="{{ route('verifikasi-konten') }}">Verifikasi Konten</a></li>
               <li><a class="dropdown-item" href="{{ route('verifikasi-file') }}">Verifikasi File</a></li>
               <li><a class="dropdown-item" href="{{ route('verifikasi-komentar') }}">Verifikasi Komentar</a></li>
-              <li><a class="dropdown-item" href="#">Kotak Saran</a></li>
+              <li><a class="dropdown-item" href="{{ route('kotak-saran') }}">Kotak Saran</a></li>
               <li><a class="dropdown-item" href="{{ route('menu') }}">Menu</a></li>
               <hr class="dropdown-divider">
               <li><a class="dropdown-item" href="{{ route('pengaturan-web') }}">Pengaturan Web</a></li>

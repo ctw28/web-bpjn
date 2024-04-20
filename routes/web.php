@@ -19,6 +19,7 @@ Route::get('/', [WebAppController::class, 'web'])->name('web'); // sementara men
 Route::get('/login', [WebAppController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/set-session', [WebAppController::class, 'setSession'])->name('setSession')->middleware('guest');
 Route::get('/session', [WebAppController::class, 'session'])->name('session');
+Route::get('/kotak-saran-web', [WebAppController::class, 'kotakSaranWeb'])->name('kotak-saran-web');
 Route::get('/konten-web/{kategori}', [WebAppController::class, 'kontenWeb'])->name('konten-web');
 Route::get('/file-web/{kategori}', [WebAppController::class, 'fileWeb'])->name('file-web');
 Route::get('/konten-read/{slug}', [WebAppController::class, 'kontenRead'])->name('konten-read');
@@ -26,6 +27,7 @@ Route::get('/file-read/{slug}', [WebAppController::class, 'fileRead'])->name('fi
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/web-logout', [WebAppController::class, 'logout']);
+    Route::get('/kotak-saran', [WebAppController::class, 'kotakSaran'])->name('kotak-saran');
     Route::get('/dashboard', [WebAppController::class, 'dashboard'])->name('dashboard');
     Route::get('/jenis-konten', [WebAppController::class, 'jenisKonten'])->name('jenis-konten');
     Route::get('/grup', [WebAppController::class, 'grup'])->name('grup');

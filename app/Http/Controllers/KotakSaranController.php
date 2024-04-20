@@ -4,82 +4,73 @@ namespace App\Http\Controllers;
 
 use App\Models\KotakSaran;
 use Illuminate\Http\Request;
+use App\Http\Requests\KotakSaranRequest;
 
 class KotakSaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $dataQuery = KotakSaran::orderBy('created_at', 'desc');
+
+        $startingNumber = 1;
+        if ($request->filled('showall')) {
+            $dataQuery = $dataQuery->get();
+        } else {
+            $paging = 25;
+            if ($request->filled('paging')) {
+                $paging = $request->paging;
+            }
+            $dataQuery = $dataQuery->paginate($paging);
+            $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
+        }
+
+        $dataQuery->transform(function ($item) use (&$startingNumber) {
+            $item->setAttribute('nomor', $startingNumber++);
+            $item->setAttribute('komentar', htmlspecialchars($item->komentar));
+            $item->setAttribute('created_at_format', dbDateTimeFormat($item->created_at));
+            $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
+            return $item;
+        });
+
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(KotakSaranRequest $request)
     {
-        //
+        $dataQuery = KotakSaran::create($request->all());
+        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+        return response()->json($dataQuery, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $dataQuery = KotakSaran::find($id);
+        if (!$dataQuery) {
+            return response()->json(['message' => 'data tidak ditemukan'], 404);
+        }
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\KotakSaran  $kotakSaran
-     * @return \Illuminate\Http\Response
-     */
-    public function show(KotakSaran $kotakSaran)
+    public function update(KotakSaranRequest $request, $id)
     {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+
+        $dataQuery->update($request->all());
+        return response()->json($dataQuery, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\KotakSaran  $kotakSaran
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(KotakSaran $kotakSaran)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\KotakSaran  $kotakSaran
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, KotakSaran $kotakSaran)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\KotakSaran  $kotakSaran
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(KotakSaran $kotakSaran)
-    {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataQuery->delete();
+        return response()->json(null, 204);
     }
 }

@@ -122,6 +122,16 @@ class WebAppController extends Controller
         return view('slide_show');
     }
 
+    public function kotakSaran()
+    {
+        return view('kotak_saran_dashboard');
+    }
+
+    public function kotakSaranWeb()
+    {
+        return view('kotak_saran_web');
+    }
+
     public function kontenWeb($kategori)
     {
         return view('konten_web', ['kategori' => $kategori]);

@@ -44,6 +44,7 @@ class HtmlCodeController extends Controller
 
         $dataQuery->transform(function ($item) use (&$startingNumber) {
             $item->setAttribute('nomor', $startingNumber++);
+            $item->setAttribute('code_text', htmlspecialchars($item->code));
             $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
             return $item;
         });
