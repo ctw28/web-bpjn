@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Publikasi;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use Illuminate\Support\Facades\Storage;
@@ -84,19 +85,39 @@ class FileController extends Controller
 
     public function store(FileRequest $request)
     {
-        $storagePath = 'files/' . date('Y') . '/' . date('m');
-        $pathUpload = uploadFile($request, 'file', $storagePath);
-        if ($pathUpload) {
-            $request['path'] = $pathUpload;
-        } else {
-            return response()->json(['message' => 'Gagal mengunggah file'], 500);
-        }
+        try {
+            $storagePath = 'files/' . date('Y') . '/' . date('m');
+            $pathUpload = uploadFile($request, 'file', $storagePath);
 
-        $dataSave = File::create($request->all());
-        $dataQuery = File::where('id', $dataSave->id)->first();
-        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
-        return response()->json($dataQuery, 201);
+            if ($pathUpload) {
+                $request['path'] = $pathUpload;
+            } else {
+                return response()->json(['message' => 'Gagal mengunggah file'], 500);
+            }
+
+            // Simpan file
+            $dataSave = File::create($request->all());
+
+            // auto publish ketika admin
+            if (is_admin()) {
+                $data = [
+                    'is_publikasi' => 1,
+                    'file_id' => $dataSave->id,
+                    'user_id' => auth()->id(),
+                ];
+                Publikasi::create($data);
+            }
+
+            // Ambil data yang baru saja disimpan
+            $dataQuery = File::where('id', $dataSave->id)->first();
+            $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+
+            return response()->json($dataQuery, 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
+
 
     public function show($id)
     {

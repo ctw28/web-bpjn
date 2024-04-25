@@ -5,6 +5,21 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
+if (!function_exists('is_admin')) {
+    function is_admin()
+    {
+        $user_id = auth()->id();
+        try {
+            $akses = daftarAkses($user_id);
+            $isAdmin = $akses->aturgrup->contains('grup_id', 1);
+            return $isAdmin;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
+
+
 if (!function_exists('getUserIdFromToken')) {
     function getUserIdFromToken()
     {
@@ -25,35 +40,6 @@ if (!function_exists('daftarAkses')) {
     function daftarAkses($user_id)
     {
         return User::with(['aturgrup.grup'])->where('id', $user_id)->firstOrFail();
-    }
-}
-
-if (!function_exists('is_admin')) {
-    function is_admin($user_id)
-    {
-        try {
-            $akses = daftarAkses($user_id);
-            $isAdmin = $akses->aturgrup->contains('grup_id', 1);
-            return $isAdmin;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-}
-
-if (!function_exists('getUserIdFromToken')) {
-    function getUserIdFromToken()
-    {
-        try {
-            $user = Auth::guard('sanctum')->user();
-            if ($user) {
-                return $user->id;
-            } else {
-                return null;
-            }
-        } catch (Exception $e) {
-            return null;
-        }
     }
 }
 

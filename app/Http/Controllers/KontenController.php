@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Konten;
+use App\Models\Publikasi;
 use Illuminate\Http\Request;
 use App\Http\Requests\KontenRequest;
-use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File as FileFacade;
 
 class KontenController extends Controller
 {
@@ -88,16 +89,33 @@ class KontenController extends Controller
     {
         $storagePath = 'kontens/' . date('Y') . '/' . date('m');
         $pathUpload = uploadFile($request, 'file', $storagePath);
-        if ($pathUpload) {
-            $request['thumbnail'] = $pathUpload;
-        } else {
-            return response()->json(['message' => 'Gagal mengunggah file'], 500);
-        }
 
-        $dataSave = Konten::create($request->all());
-        $dataQuery = Konten::where('id', $dataSave->id)->first();
-        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
-        return response()->json($dataQuery, 201);
+        try {
+            if ($pathUpload) {
+                $request['thumbnail'] = $pathUpload;
+            } else {
+                return response()->json(['message' => 'Gagal mengunggah file'], 500);
+            }
+
+            $dataSave = Konten::create($request->all());
+
+            // auto publish ketika admin
+            if (is_admin()) {
+                $data = [
+                    'is_publikasi' => 1,
+                    'konten_id' => $dataSave->id,
+                    'user_id' => auth()->id(),
+                ];
+                Publikasi::create($request->all());
+            }
+
+            $dataQuery = Konten::where('id', $dataSave->id)->first();
+            $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+
+            return response()->json($dataQuery, 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function show($id)

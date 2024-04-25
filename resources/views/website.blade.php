@@ -230,8 +230,6 @@
         tentangKami();
         berita();
         file();
-        // htmlCode('peta-lokasi','#peta-lokasi');
-        // htmlCode('visitor','#visitor');
         slideShow('#slideWeb');
       });
     </script>

@@ -14,8 +14,8 @@
       <a class="navbar-brand" href="{{ url('/dashboard') }}">Dashboard Website</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Halaman Depan Web</a>
@@ -35,22 +35,32 @@
               <li><a class="dropdown-item" href="{{ route('slide-show') }}">Slide Show</a></li>
             </ul>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Administrator
+          <li class="nav-item dropdown menu-editor" style="display:none;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarEditor" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Editor
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarAdmin">
+            <ul class="dropdown-menu" aria-labelledby="navbarEditor">
               <li><a class="dropdown-item" href="{{ route('verifikasi-konten') }}">Verifikasi Konten</a></li>
               <li><a class="dropdown-item" href="{{ route('verifikasi-file') }}">Verifikasi File</a></li>
               <li><a class="dropdown-item" href="{{ route('verifikasi-komentar') }}">Verifikasi Komentar</a></li>
               <li><a class="dropdown-item" href="{{ route('kotak-saran') }}">Kotak Saran</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown menu-admin" style="display:none;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Administrator
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarAdmin">
               <li><a class="dropdown-item" href="{{ route('menu') }}">Menu</a></li>
-              <hr class="dropdown-divider">
               <li><a class="dropdown-item" href="{{ route('pengaturan-web') }}">Pengaturan Web</a></li>
               <li><a class="dropdown-item" href="{{ route('jenis-konten') }}">Jenis Konten</a></li>
+              <hr class="dropdown-divider">
               <li><a class="dropdown-item" href="{{ route('grup') }}">Grup</a></li>
               <li><a class="dropdown-item" href="{{ route('akun') }}">Akun</a></li>
             </ul>
+          </li>
+          <li class="nav-item menu-ganti-akses" style="display:none;">
+            <a class="nav-link" href="javascript:;" onclick="gantiAkses()">Ganti Akses</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="javascript:;" onclick="logoutWeb()">Keluar</a>
@@ -72,12 +82,42 @@
     </div>
   </div>
 
-  <!-- Footer -->
+    <div class="modal fade" id="aksesModal" tabindex="-1" aria-labelledby="aksesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                  <li class="nav-item dropdown daftar-akses">
+                  </li>
+                </div>
+            </div>
+        </div>
+    </div>  
 
     <!-- Footer -->
     @include('partials_footer')
     <script src="{{ asset('js/myapp.js') }}"></script>
+    <script>
+      var akses_grup = localStorage.getItem('akses_grup');
+      var daftar_akses = localStorage.getItem('daftar_akses');
+      if (akses_grup == 1) {
+          $('.menu-admin').show();
+          $('.menu-editor').show();
+      } else if (akses_grup == 2) {
+          $('.menu-editor').show();
+      }
+      if(daftar_akses.length>1){
+        $('.menu-ganti-akses').show();
+        // console.log(daftar_akses);
+        $.each(daftar_akses, function(index, item) {
+            var listItem = $('<li>').append(
+                $('<a>').addClass('dropdown-item').attr('href', '#').text(item.grup.nama)
+            );
+            $('.daftar-akses').append(listItem);
+        });
+      }
 
+      
+    </script>
     {{-- <script src="{{ asset('js/loading.js') }}"></script>     --}}
     @yield('script')
 
