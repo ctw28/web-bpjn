@@ -26,6 +26,7 @@ Route::get('/konten-read/{slug}', [WebAppController::class, 'kontenRead'])->name
 Route::get('/file-read/{slug}', [WebAppController::class, 'fileRead'])->name('file-read');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/set-akses/{id}', [WebAppController::class, 'setAkses'])->name('setAkses');
     Route::post('/web-logout', [WebAppController::class, 'logout']);
     Route::get('/kotak-saran', [WebAppController::class, 'kotakSaran'])->name('kotak-saran');
     Route::get('/dashboard', [WebAppController::class, 'dashboard'])->name('dashboard');

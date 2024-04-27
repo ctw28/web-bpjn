@@ -85,8 +85,8 @@
     <div class="modal fade" id="aksesModal" tabindex="-1" aria-labelledby="aksesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div class="modal-body text-center">
-                  <li class="nav-item dropdown daftar-akses">
+                <div class="modal-body">
+                  <ul class="nav-item dropdown daftar-akses">
                   </li>
                 </div>
             </div>
@@ -98,24 +98,36 @@
     <script src="{{ asset('js/myapp.js') }}"></script>
     <script>
       var akses_grup = localStorage.getItem('akses_grup');
-      var daftar_akses = localStorage.getItem('daftar_akses');
+      var daftar_akses = JSON.parse(localStorage.getItem('daftar_akses'));
       if (akses_grup == 1) {
           $('.menu-admin').show();
           $('.menu-editor').show();
       } else if (akses_grup == 2) {
           $('.menu-editor').show();
       }
+      // console.log(daftar_akses);
       if(daftar_akses.length>1){
         $('.menu-ganti-akses').show();
-        // console.log(daftar_akses);
         $.each(daftar_akses, function(index, item) {
-            var listItem = $('<li>').append(
-                $('<a>').addClass('dropdown-item').attr('href', '#').text(item.grup.nama)
-            );
-            $('.daftar-akses').append(listItem);
+          var listItem = `<li><a href='#' onclick="setAkses(${item.grup.id})">${item.grup.nama}</a></li>`;
+          $('.daftar-akses').append(listItem);
         });
       }
 
+      function setAkses(id){
+        localStorage.setItem('akses_grup', id);
+        toastr.success('set akses berhasil, akan diarahkan ke halaman dashboard!', 'berhasil', {timeOut: 1000});
+        var goUrl = `{{ url('/dashboard') }}`;
+        window.location.replace(goUrl);
+      }
+
+      function gantiAkses(){
+        var myModalAkses = new bootstrap.Modal(document.getElementById('aksesModal'), {
+          keyboard: false
+        });       
+        myModalAkses.show();
+
+      };
       
     </script>
     {{-- <script src="{{ asset('js/loading.js') }}"></script>     --}}

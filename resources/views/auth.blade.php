@@ -61,7 +61,8 @@
                 success: function(response) {
                     toastr.success('login berhasil, proses set session!', 'login berhasil', {timeOut: 1000});
                     localStorage.setItem('access_token', response.access_token);
-                    localStorage.setItem('daftar_akses', response.daftar_akses);
+                    // localStorage.setItem('daftar_akses', response.daftar_akses);
+                    localStorage.setItem('daftar_akses', JSON.stringify(response.daftar_akses));
                     localStorage.setItem('akses_grup', response.akses_grup);
                     setSession(form);
                 },
