@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebAppController;
+use App\Http\Controllers\ShortLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +25,13 @@ Route::get('/konten-web/{kategori}', [WebAppController::class, 'kontenWeb'])->na
 Route::get('/file-web/{kategori}', [WebAppController::class, 'fileWeb'])->name('file-web');
 Route::get('/konten-read/{slug}', [WebAppController::class, 'kontenRead'])->name('konten-read');
 Route::get('/file-read/{slug}', [WebAppController::class, 'fileRead'])->name('file-read');
+Route::get('/go/{slug}', [ShortLinkController::class, 'redirect']); //untuk short link
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/set-akses/{id}', [WebAppController::class, 'setAkses'])->name('setAkses');
     Route::post('/web-logout', [WebAppController::class, 'logout']);
     Route::get('/kotak-saran', [WebAppController::class, 'kotakSaran'])->name('kotak-saran');
+    Route::get('/short-link', [WebAppController::class, 'shortLink'])->name('short-link');
     Route::get('/dashboard', [WebAppController::class, 'dashboard'])->name('dashboard');
     Route::get('/jenis-konten', [WebAppController::class, 'jenisKonten'])->name('jenis-konten');
     Route::get('/grup', [WebAppController::class, 'grup'])->name('grup');

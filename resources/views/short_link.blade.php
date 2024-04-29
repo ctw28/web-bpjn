@@ -1,13 +1,13 @@
 @extends('template_dashboard')
 
 @section('head')
-    <title>Jenis Konten</title>
+    <title>Short Link</title>
 @endsection
 
 @section('container')
 
-    <h1>Jenis Konten Web</h1>
-    <p>digunakan untuk mengatur jenis konten web, apakah termasuk artikel atau file yang akan digunakan pada website ini </p>
+    <h1>Short Link</h1>
+    <p>digunakan untuk membuat short link</p>
     <hr>
     <div class="font-12">double click pada data yang akan ingin diubah</div>
 
@@ -26,18 +26,17 @@
         </div>
     </div>
 
-
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Jenis Konten</th>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Url Tujuan</th>
                     <th scope="col">Slug</th>
-                    <th scope="col">Kategori</th>
-                    <th scope="col">Deskripsi</th>
-                    <th scope="col">User</th>
-                    <th scope="col">Waktu</th>
+                    <th scope="col">Url Short</th>
+                    <th scope="col">Counter</th>
+                    <th scope="col">Akun</th>
                     <th scope="col">Aksi</th>
                 </tr>
             </thead>
@@ -59,33 +58,28 @@
 <script src="{{ asset('js/token.js') }}"></script>
 
 <script>
-    var vApiUrl=base_url+'/'+'api/jenis-konten';
+    var vApiUrl=base_url+'/'+'api/short-link';
 
 $(document).ready(function() {
 
-    // function tambah(){
     $(document).on('click', '#tambah', function() {
         $('#data-list').prepend(`
             <tr data-id="">
                 <td></td>
                 <td><input type="text" class="form-control" name="nama[]"></td>
+                <td><input type="text" class="form-control" name="url_src[]"></td>
                 <td><input type="text" class="form-control" name="slug[]"></td>
                 <td>
-                    <select class="form-control" name="kategori[]">
-                        <option value='ARTIKEL'>Artikel</option>
-                        <option value='FILE'>File</option>
-                    </select>
-                </td>
-                <td><textarea class="form-control" name="deskripsi[]"></textarea></td>
-                <td>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success simpan-baris" >Simpan</button>
-                        <button type="button" class="btn btn-warning batal-baris" >Batal</button>
+                        <button type="button" class="btn btn-success simpan-baris">Simpan</button>
+                        <button type="button" class="btn btn-warning batal-baris">Batal</button>
                     </div>
                 </td>
                 <td></td>
                 <td></td>
-            </tr>
+                <td></td>
+
+                </tr>
         `);
         resetNomorUrut();
     });
@@ -98,19 +92,22 @@ $(document).ready(function() {
         });
     }
 
+    // function batalBaris(button) {
     $(document).on('click', '.batal-baris', function() {
+        var id=$(this).data('id');
+
         $(this).closest('tr').remove();
         resetNomorUrut();
     });
 
     // function simpanBaris(button) {
     $(document).on('click', '.simpan-baris', function() {
+        // var button = $(this);
         var baris = $(this).closest('tr');
         var postData = {
             nama: baris.find("input[name='nama[]']").val(),
+            url_src: baris.find("input[name='url_src[]']").val(),
             slug: baris.find("input[name='slug[]']").val(),
-            kategori: baris.find("select[name='kategori[]']").val(),
-            deskripsi: baris.find("textarea[name='deskripsi[]']").val()
         };
 
         $.ajax({
@@ -122,19 +119,17 @@ $(document).ready(function() {
                 toastr.success('operasi berhasil dilakukan!', 'berhasil');
                 baris.attr("data-id", response.id); 
                 baris.find("td:eq(1)").text(response.nama); 
-                baris.find("td:eq(2)").text(response.slug); 
-                baris.find("td:eq(3)").text(response.kategori); 
-                baris.find("td:eq(4)").text(response.deskripsi); 
-                baris.find("td:eq(5)").text(response.user.name); 
-                baris.find("td:eq(6)").text(response.updated_at_format);
+                baris.find("td:eq(2)").text(response.url_src); 
+                baris.find("td:eq(3)").text(response.slug); 
+                baris.find("td:eq(4)").html(shortUrl(response.slug)); 
+                baris.find("td:eq(5)").text("0"); 
+                baris.find("td:eq(6)").text(response.user.name); 
                 baris.find("td:eq(7)").html(`<div class="btn-group btn-group-sm" role="group">
                                                 <button type="button" class="btn btn-danger hapusData" data-id="${response.id}">Hapus</button>
                                             </div>`);
 
-
-
                 //---------------- sembunyikan inputan -------------------
-                baris.find("input[name='nama[]'], input[name='slug[]'], select[name='kategori[]'], textarea[name='deskripsi[]'], .simpan-baris, .batal-baris").hide();
+                baris.find("input .simpan-baris, .batal-baris").hide();
             },
             error: function() {
                 alert('operasi gagal dilakukan!');
@@ -161,20 +156,25 @@ $(document).ready(function() {
                         $cell.html('<input type="text" class="form-control" value="' + content + '">');
                         break;
                     case 3:
-                        $cell.html('<select class="form-control"><option value="ARTIKEL">Artikel</option><option value="FILE">File</option></select>');
+                        $cell.html('<input type="text" class="form-control" value="' + content + '">');
                         break;
                     case 4:
-                        $cell.html('<textarea class="form-control">' + content + '</textarea>');
+                        $cell.html('<textarea class="form-control">' + content + '"</textarea>');
                         break;
                     default:
                         break;
                 }
-                $cell.find('input, select, textarea').first().focus();
+                $cell.find('input').first().focus();
             }
         });
     });    
 
-    $('#data-list').on('focusout', 'input, textarea, select', function() {
+    function shortUrl(slug){
+        var url=base_url+'/go/'+slug;
+        return `<a href="${url}" target="_blank">${url}</a>`;
+    }
+
+    $('#data-list').on('focusout', 'input', function() {
         var tr = $(this).closest('tr');
         var id = $(tr).attr('data-id');
         var newValue = $(this).val();
@@ -182,9 +182,8 @@ $(document).ready(function() {
         if(id!==''){
             $(this).closest('td').html(newValue);
             var nama = $(tr).find('td:nth-child(2)').text();
-            var slug = $(tr).find('td:nth-child(3)').text();
-            var kategori = $(tr).find('td:nth-child(4)').text();
-            var deskripsi = $(tr).find('td:nth-child(5)').text();    
+            var url_src = $(tr).find('td:nth-child(3)').text();
+            var slug = $(tr).find('td:nth-child(4)').text();
 
             // console.log('old : '+oldValue+' ,new : '+newValue);
             if(oldValue!==newValue)
@@ -193,12 +192,12 @@ $(document).ready(function() {
                     type: 'PUT',
                     data: {
                         nama:nama,
+                        url_src:url_src,
                         slug:slug,
-                        kategori:kategori,
-                        deskripsi:deskripsi,
                     },
                     dataType: 'json',
                     success: function(response) {
+                        $(tr).find('td:nth-child(5)').text(shortUrl(slug));                        
                         toastr.success('operasi berhasil dilakukan!', 'berhasil');
                     },
                     error: function() {
@@ -214,8 +213,6 @@ $(document).ready(function() {
     })
 
     loadData();
-
-
     function loadData(page = 1, search = '') {
         $.ajax({
             url: vApiUrl+'?page=' + page + '&search=' + search + '&paging=' + vPaging,
@@ -230,14 +227,20 @@ $(document).ready(function() {
                     dataList.append(`<tr data-id="${dt.id}"> 
                             <td>${dt.nomor}</td> 
                             <td>${dt.nama}</td> 
-                            <td>${dt.slug}</td> 
-                            <td>${dt.kategori}</td> 
-                            <td>${dt.deskripsi}</td> 
+                            <td>${dt.url_src}</td> 
+                            <td>
+                                ${dt.slug}
+                            </td> 
+                            <td>
+                                ${shortUrl(dt.slug)}
+                            </td> 
+                            <td>
+                                ${dt.jumlah_akses}
+                            </td> 
                             <td>${dt.user.name}</td> 
-                            <td>${dt.updated_at_format}</td> 
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-danger hapusData" data-id="${dt.id})" >Hapus</button>
+                                    <button type="button" class="btn btn-danger hapusData" data-id="${dt.id}">Hapus</button>
                                 </div>                                        
                             </td>
                         </tr>`);
@@ -254,7 +257,7 @@ $(document).ready(function() {
         var search = $('#search-input').val();
         loadData(page, search);
     });
-
+        
     $('#refresh').on('click', function(e) {
         loadData();
     });
@@ -272,6 +275,7 @@ $(document).ready(function() {
     // function hapusData(id){
     $(document).on('click', '.hapusData', function() {
         var id=$(this).data('id');
+
         var selectedPage = $('.page-item.active .page-link').data('page');
         if(confirm('apakah anda yakin?'))
             $.ajax({
@@ -288,7 +292,6 @@ $(document).ready(function() {
                 }
             });                
     });
-
 });
 
 </script>

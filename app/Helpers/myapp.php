@@ -19,6 +19,19 @@ if (!function_exists('is_admin')) {
     }
 }
 
+if (!function_exists('is_editor')) {
+    function is_editor()
+    {
+        $user_id = auth()->id();
+        try {
+            $akses = daftarAkses($user_id);
+            $is_editor = $akses->aturgrup->contains('grup_id', 2);
+            return $is_editor;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
 
 if (!function_exists('getUserIdFromToken')) {
     function getUserIdFromToken()

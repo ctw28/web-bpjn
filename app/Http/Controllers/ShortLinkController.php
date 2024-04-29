@@ -3,83 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShortLink;
+use App\Http\Requests\ShortLinkRequest;
 use Illuminate\Http\Request;
 
 class ShortLinkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $dataQuery = ShortLink::with('user')->orderBy('nama', 'asc');
+        if ($request->filled('search')) {
+            $dataQuery->where('nama', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('showall')) {
+            $dataQuery = $dataQuery->get();
+            $startingNumber = 1;
+        } else {
+            $paging = 25;
+            if ($request->filled('paging')) {
+                $paging = $request->paging;
+            }
+            $dataQuery = $dataQuery->paginate($paging);
+            $startingNumber = ($dataQuery->currentPage() - 1) * $dataQuery->perPage() + 1;
+        }
+
+        $dataQuery->transform(function ($item) use (&$startingNumber) {
+            $item->setAttribute('nomor', $startingNumber++);
+            $item->setAttribute('updated_at_format', dbDateTimeFormat($item->updated_at));
+            return $item;
+        });
+
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(ShortLinkRequest $request)
     {
-        //
+        $dataSave = ShortLink::create($request->all());
+        $dataQuery = ShortLink::with('user')
+            ->where('id', $dataSave->id)
+            ->first();
+        $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
+        return response()->json($dataQuery, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $dataQuery = ShortLink::find($id);
+        if (!$dataQuery) {
+            return response()->json(['message' => 'data tidak ditemukan'], 404);
+        }
+        return response()->json($dataQuery);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ShortLink  $shortLink
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ShortLink $shortLink)
+    public function update(ShortLinkRequest $request, $id)
     {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+
+        $dataQuery->update($request->all());
+        return $dataQuery;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ShortLink  $shortLink
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ShortLink $shortLink)
+    public function destroy($id)
     {
-        //
+        $dataQueryResponse = $this->show($id);
+        if ($dataQueryResponse->getStatusCode() === 404) {
+            return $dataQueryResponse;
+        }
+        $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
+        $dataQuery->delete();
+        return response()->json(null, 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ShortLink  $shortLink
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ShortLink $shortLink)
+    public function redirect($slug)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ShortLink  $shortLink
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ShortLink $shortLink)
-    {
-        //
+        $shortLink = ShortLink::where('slug', $slug)->first();
+        if (!$shortLink) {
+            return response()->json(['message' => 'slug tidak valid'], 404);
+        }
+        $shortLink->increment('jumlah_akses');
+        return redirect()->away($shortLink->url_src);
     }
 }

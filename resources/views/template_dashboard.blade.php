@@ -33,6 +33,7 @@
               <li><a class="dropdown-item" href="{{ route('file-dashboard') }}">File</a></li>
               <li><a class="dropdown-item" href="{{ route('html-code') }}">Html Code</a></li>
               <li><a class="dropdown-item" href="{{ route('slide-show') }}">Slide Show</a></li>
+              <li><a class="dropdown-item" href="{{ route('short-link') }}">Short Link</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown menu-editor" style="display:none;">

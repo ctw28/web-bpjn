@@ -64,14 +64,14 @@ $(document).ready(function() {
             <tr data-id="">
                 <td></td>
                 <td><input type="text" class="form-control" name="nama[]"></td>
-                <td></td>
-                <td></td>
                 <td>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-success simpan-baris">Simpan</button>
                         <button type="button" class="btn btn-warning batal-baris">Batal</button>
                     </div>
                 </td>
+                <td></td>
+                <td></td>
             </tr>
         `);
         resetNomorUrut();

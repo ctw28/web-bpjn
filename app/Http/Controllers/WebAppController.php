@@ -132,6 +132,11 @@ class WebAppController extends Controller
         return view('kotak_saran_web');
     }
 
+    public function shortLink()
+    {
+        return view('short_link');
+    }
+
     public function kontenWeb($kategori)
     {
         return view('konten_web', ['kategori' => $kategori]);

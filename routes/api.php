@@ -14,6 +14,7 @@ use App\Http\Controllers\WebAppController;
 use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\HtmlCodeController;
 use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\ShortLinkController;
 use App\Http\Controllers\PublikasiController;
 use App\Http\Controllers\SlideShowController;
 use App\Http\Controllers\KotakSaranController;
@@ -63,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
     Route::resource('komentar', KomentarController::class);
+    Route::resource('short-link', ShortLinkController::class);
     Route::resource('html-code', HtmlCodeController::class);
     Route::resource('slide-show', SlideShowController::class);
     Route::resource('kotak-saran', KotakSaranController::class);

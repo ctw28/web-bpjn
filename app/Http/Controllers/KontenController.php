@@ -22,7 +22,7 @@ class KontenController extends Controller
             ])->orderBy('waktu', 'desc')->orderBy('judul', 'asc');
 
         if (!$request->filled('is_web')) {
-            if (!is_admin(auth()->id()))
+            if (!is_admin() && !is_editor())
                 $dataQuery->where('user_id', auth()->id());
         }
 
@@ -100,7 +100,7 @@ class KontenController extends Controller
             $dataSave = Konten::create($request->all());
 
             // auto publish ketika admin
-            if (is_admin()) {
+            if (is_admin() || is_editor()) {
                 $data = [
                     'is_publikasi' => 1,
                     'konten_id' => $dataSave->id,

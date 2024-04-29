@@ -22,7 +22,7 @@ class Komentar extends Model
     public function setIsPublikasiAttribute($value)
     {
         if (auth()->check()) {
-            if (!is_admin(auth()->id())) {
+            if (!is_admin() && !is_editor()) {
                 // throw new \Exception("tidak bisa mengubah kolom 'is_publikasi', khusus admin.");
                 abort(response()->json(['message' => "Tidak bisa mengubah kolom 'is_publikasi', khusus admin."], 403));
             }
