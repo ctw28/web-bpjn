@@ -17,16 +17,18 @@ class TokenRefresh
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
-        
+
+        // Perbarui waktu kedaluwarsa token jika pengguna telah diotentikasi
         if (auth()->check()) {
             $user = auth()->user();
             $token = $user->currentAccessToken();
-
-            // Perbarui waktu kedaluwarsa token
-            $token->forceFill([
-                'last_used_at' => now(),
-                'expires_at' => $token->freshTimestamp()->addMinutes(config('sanctum.expiration')),
-            ])->save();
+            // Periksa apakah token ditemukan
+            if ($token) {
+                // Perbarui waktu kedaluwarsa token
+                $token->forceFill([
+                    'last_used' => now(),
+                ])->save();
+            }
         }
 
         return $response;        
