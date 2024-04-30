@@ -77,7 +77,7 @@ if (!function_exists('generateUniqueFileName')) {
     }
 }
 
-if (!function_exists('uploadFile')) {
+if (!function_exists('generateSlug')) {
     function generateSlug($judul, $waktu)
     {
         $disallowed_chars = array(
@@ -104,10 +104,25 @@ if (!function_exists('uploadFile')) {
     }
 }
 
+if (!function_exists('ukuranFile')) {
+    function ukuranFile($size)
+    {
+        $satuan = ['B', 'KB', 'MB', 'GB', 'TB'];
+        for ($i = 0; $size >= 1024 && $i < 4; $i++) {
+            $size /= 1024;
+        }
+        return round($size, 2) . ' ' . $satuan[$i];
+    }
+}
+
 if (!function_exists('uploadFile')) {
     function uploadFile($request, $reqFileName = 'file', $storagePath = null, $fileName = null)
     {
         $uploadedFile = $request->file($reqFileName);
+        if (!$uploadedFile->isValid()) {
+            return false;
+        }
+
         $originalFileName = $uploadedFile->getClientOriginalName();
         $ukuranFile = $uploadedFile->getSize();
         $tipeFile = $uploadedFile->getMimeType();
@@ -127,7 +142,11 @@ if (!function_exists('uploadFile')) {
         $fileFullPath = public_path($storagePath . '/' . $fileName);
         chmod($fileFullPath, 0755);
         $path = $storagePath . '/' . $fileName;
-        return $path;
+        return [
+            'path' => $path,
+            'jenis' => $tipeFile,
+            'ukuran' => ($ukuranFile/1024),
+        ];
     }
 }
 

@@ -87,10 +87,12 @@ class FileController extends Controller
     {
         try {
             $storagePath = 'files/' . date('Y') . '/' . date('m');
-            $pathUpload = uploadFile($request, 'file', $storagePath);
-
-            if ($pathUpload) {
-                $request['path'] = $pathUpload;
+            $uploadFile = uploadFile($request, 'file', $storagePath);
+            // dd($uploadFile);
+            if ($uploadFile !== false) {
+                $request['path'] = $uploadFile['path'];
+                $request['ukuran'] = (float)$uploadFile['ukuran'];
+                $request['jenis_file'] = $uploadFile['jenis'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
             }
@@ -144,12 +146,15 @@ class FileController extends Controller
             }
 
             $storagePath = 'files/' . date('Y') . '/' . date('m');
-            $pathUpload = uploadFile($request, 'file',  $storagePath);
-            if ($pathUpload) {
-                $request['path'] = $pathUpload;
+
+            $uploadFile = uploadFile($request, 'file', $storagePath);
+            if ($uploadFile !== false) {
+                $request['path'] = $uploadFile['path'];
+                $request['ukuran'] = $uploadFile['ukuran'];
+                $request['jenis_file'] = $uploadFile['jenis'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
-            }
+            }            
         }
 
         $dataQuery->update($request->all());

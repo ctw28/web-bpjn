@@ -14,8 +14,14 @@ class ImageEditorController extends Controller
         ]);
 
         $storagePath = 'editor/images/' . date('Y') . '/' . date('m');
-        $path = uploadFile($request, 'file', $storagePath);
-        $path = url('/' . $path);
-        return response()->json(['success' => 'Image uploaded successfully.', 'image' => $path]);
+        // $path = uploadFile($request, 'file', $storagePath);
+        $uploadFile = uploadFile($request, 'file', $storagePath);
+        if ($uploadFile !== false) {
+            $path = url('/' . $uploadFile['path']);
+            return response()->json(['success' => 'Image uploaded successfully.', 'image' => $path]);
+        } else {
+            return response()->json(['message' => 'Gagal mengunggah file'], 500);
+        }
+        
     }
 }

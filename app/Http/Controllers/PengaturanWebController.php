@@ -36,17 +36,33 @@ class PengaturanWebController extends Controller
     public function store(PengaturanWebRequest $request)
     {
         if ($request->hasFile('fileicon')) {
-            $path = uploadFile($request, 'fileicon', 'images', 'favicon');
-            if ($path) {
-                $request['icon'] = $path;
+            // $path = uploadFile($request, 'fileicon', 'images', 'favicon');
+            // if ($path) {
+            //     $request['icon'] = $path;
+            // } else {
+            //     return response()->json(['message' => 'Gagal mengunggah icon'], 500);
+            // }
+
+            $uploadFile = uploadFile($request, 'fileicon', 'images', 'favicon');
+            if ($uploadFile !== false) {
+                $request['icon'] = $uploadFile['path'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah icon'], 500);
             }
+
+
         }
         if ($request->hasFile('filelogo')) {
-            $path = uploadFile($request, 'filelogo', 'images', 'logo');
-            if ($path) {
-                $request['logo'] = $path;
+            // $path = uploadFile($request, 'filelogo', 'images', 'logo');
+            // if ($path) {
+            //     $request['logo'] = $path;
+            // } else {
+            //     return response()->json(['message' => 'Gagal mengunggah logo'], 500);
+            // }
+
+            $uploadFile = uploadFile($request, 'filelogo', 'images', 'logo');
+            if ($uploadFile !== false) {
+                $request['logo'] = $uploadFile['path'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah logo'], 500);
             }
@@ -79,17 +95,30 @@ class PengaturanWebController extends Controller
         $dataQuery = $dataQueryResponse->getOriginalContent(); // Ambil instance model dari respons
 
         if ($request->hasFile('fileicon')) {
-            $path = uploadFile($request, 'fileicon', 'images', 'favicon');
-            if ($path) {
-                $request['icon'] = $path;
+            // $path = uploadFile($request, 'fileicon', 'images', 'favicon');
+            // if ($path) {
+            //     $request['icon'] = $path;
+            // } else {
+            //     return response()->json(['message' => 'Gagal mengunggah icon'], 500);
+            // }
+            $uploadFile = uploadFile($request, 'fileicon', 'images', 'favicon');
+            if ($uploadFile !== false) {
+                $request['icon'] = $uploadFile['path'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah icon'], 500);
             }
+
         }
         if ($request->hasFile('filelogo')) {
-            $path = uploadFile($request, 'filelogo', 'images', 'logo');
-            if ($path) {
-                $request['logo'] = $path;
+            // $path = uploadFile($request, 'filelogo', 'images', 'logo');
+            // if ($path) {
+            //     $request['logo'] = $path;
+            // } else {
+            //     return response()->json(['message' => 'Gagal mengunggah logo'], 500);
+            // }
+            $uploadFile = uploadFile($request, 'filelogo', 'images', 'logo');
+            if ($uploadFile !== false) {
+                $request['logo'] = $uploadFile['path'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah logo'], 500);
             }

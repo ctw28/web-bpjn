@@ -64,12 +64,20 @@ class SlideShowController extends Controller
     public function store(SlideShowRequest $request)
     {
         $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
-        $pathUpload = uploadFile($request, 'file', $storagePath);
-        if ($pathUpload) {
-            $request['path'] = $pathUpload;
+        // $pathUpload = uploadFile($request, 'file', $storagePath);
+        // if ($pathUpload) {
+        //     $request['path'] = $pathUpload;
+        // } else {
+        //     return response()->json(['message' => 'Gagal mengunggah file'], 500);
+        // }
+
+        $uploadFile = uploadFile($request, 'file', $storagePath);
+        if ($uploadFile !== false) {
+            $request['path'] = $uploadFile['path'];
         } else {
             return response()->json(['message' => 'Gagal mengunggah file'], 500);
         }
+
 
         $dataQuery = SlideShow::create($request->all());
         $dataQuery->updated_at_format = dbDateTimeFormat($dataQuery->updated_at);
@@ -99,13 +107,21 @@ class SlideShowController extends Controller
                 FileFacade::delete($dataQuery->path);
             }
 
-            $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
-            $pathUpload = uploadFile($request, 'file', $storagePath);
-            if ($pathUpload) {
-                $request['path'] = $pathUpload;
+            // $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
+            // $pathUpload = uploadFile($request, 'file', $storagePath);
+            // if ($pathUpload) {
+            //     $request['path'] = $pathUpload;
+            // } else {
+            //     return response()->json(['message' => 'Gagal mengunggah file'], 500);
+            // }
+
+            $uploadFile = uploadFile($request, 'file', $storagePath);
+            if ($uploadFile !== false) {
+                $request['path'] = $uploadFile['path'];
             } else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
             }
+            
         }
 
         $dataQuery->update($request->all());

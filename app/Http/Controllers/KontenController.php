@@ -88,7 +88,12 @@ class KontenController extends Controller
     public function store(KontenRequest $request)
     {
         $storagePath = 'kontens/' . date('Y') . '/' . date('m');
-        $pathUpload = uploadFile($request, 'file', $storagePath);
+        // $pathUpload = uploadFile($request, 'file', $storagePath);
+        $uploadFile = uploadFile($request, 'file', $storagePath);
+        $pathUpload=null;
+        if ($uploadFile !== false) {
+            $pathUpload = $uploadFile['path'];
+        }
 
         try {
             if ($pathUpload) {
@@ -142,10 +147,10 @@ class KontenController extends Controller
             }
 
             $storagePath = 'kontens/' . date('Y') . '/' . date('m');
-            $pathUpload = uploadFile($request, 'file', $storagePath);
-            if ($pathUpload) {
-                $request['thumbnail'] = $pathUpload;
-            } else {
+            $uploadFile = uploadFile($request, 'file', $storagePath);
+            if ($uploadFile !== false) {
+                $request['thumbnail'] = $uploadFile['path'];
+            }else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
             }
         }
