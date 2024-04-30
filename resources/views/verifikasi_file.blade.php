@@ -198,8 +198,8 @@ $(document).ready(function() {
                             <td>
                                 <span class="badge text-bg-info">
                                     <i class="bi bi-view-list"></i> ${dt.jumlah_akses}  
-                                    <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike.length}  
-                                    <i class="bi bi-chat-right-text"></i> ${dt.komentar.length}
+                                    <i class="bi bi-hand-thumbs-up"></i> ${dt.likedislike_count}  
+                                    <i class="bi bi-chat-right-text"></i> ${dt.komentar_count}
                                 </span>
                             </td> 
                             <td>${dt.updated_at_format}</td> 
