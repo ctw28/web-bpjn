@@ -126,6 +126,7 @@ if (!function_exists('uploadFile')) {
         $originalFileName = $uploadedFile->getClientOriginalName();
         $ukuranFile = $uploadedFile->getSize();
         $tipeFile = $uploadedFile->getMimeType();
+        $ext = $uploadedFile->getClientOriginalExtension();
         if (!$storagePath)
             $storagePath = 'uploads/' . date('Y') . '/' . date('m');
 
@@ -135,8 +136,7 @@ if (!function_exists('uploadFile')) {
 
         if (!$fileName)
             $fileName = generateUniqueFileName();
-        else
-            $fileName = $fileName . "." . $uploadedFile->getClientOriginalExtension();
+        $fileName .= '.'.$ext;
 
         $uploadedFile->move(public_path($storagePath), $fileName);
         $fileFullPath = public_path($storagePath . '/' . $fileName);
