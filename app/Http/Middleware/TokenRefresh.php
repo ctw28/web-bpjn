@@ -18,18 +18,7 @@ class TokenRefresh
     {
         $response = $next($request);
 
-        // Perbarui waktu kedaluwarsa token jika pengguna telah diotentikasi
-        if (auth()->check()) {
-            $user = auth()->user();
-            $token = $user->currentAccessToken();
-            // Periksa apakah token ditemukan
-            if ($token) {
-                // Perbarui waktu kedaluwarsa token
-                $token->forceFill([
-                    'last_used' => now(),
-                ])->save();
-            }
-        }
+        updateTokenUsed();
 
         return $response;        
     }

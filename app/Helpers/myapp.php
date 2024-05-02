@@ -150,6 +150,21 @@ if (!function_exists('uploadFile')) {
     }
 }
 
+if (!function_exists('updateTokenUsed')) {
+    function updateTokenUsed(){
+        if (auth()->check()) {
+            $user = auth()->user();
+            $token = $user->tokens->last();
+            if ($token) {
+                // echo $token;die;
+                $token->forceFill([
+                    'last_used_at' => now(),
+                ])->save();
+            }
+        }           
+    }
+}
+
 if (!function_exists('ambilKata')) {
     function ambilKata($text, $limit = 25)
     {
