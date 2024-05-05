@@ -129,6 +129,7 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 1, 'grup_id' => 2],
             ['user_id' => 1, 'grup_id' => 3],
             ['user_id' => 2, 'grup_id' => 2],
+            ['user_id' => 2, 'grup_id' => 3],
             ['user_id' => 3, 'grup_id' => 3],
             ['user_id' => 4, 'grup_id' => 3],
             ['user_id' => 5, 'grup_id' => 3],

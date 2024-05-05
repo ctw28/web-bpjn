@@ -18,11 +18,10 @@
         <span class="navbar-toggler-icon"></span>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       </button>
-      <ul class="navbar-nav">
+      <ul class="navbar-nav menu-akun" style="display:none;">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Halaman Depan Web</a>
         </li>
-        @auth
         <li class="nav-item">
           <a class="nav-link" href="{{ url('dashboard') }}">Dashboard</a>
         </li>
@@ -68,9 +67,8 @@
           <a class="nav-link" href="javascript:;" onclick="gantiAkses()">Ganti Akses</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="javascript:;" onclick="logoutWeb()">Keluar</a>
+          <a class="nav-link" href="javascript:;" onclick="forceLogout()">Keluar</a>
         </li>
-        @endauth
       </ul>
     </div>
     </div>
@@ -104,19 +102,23 @@
   <script>
     var akses_grup = localStorage.getItem('akses_grup');
     var daftar_akses = JSON.parse(localStorage.getItem('daftar_akses'));
-    if (akses_grup == 1) {
-      $('.menu-admin').show();
-      $('.menu-editor').show();
-    } else if (akses_grup == 2) {
-      $('.menu-editor').show();
-    }
-    // console.log(daftar_akses);
-    if (daftar_akses.length > 1) {
-      $('.menu-ganti-akses').show();
-      $.each(daftar_akses, function(index, item) {
-        var listItem = `<li><a href='#' onclick="setAkses(${item.grup.id})">${item.grup.nama}</a></li>`;
-        $('.daftar-akses').append(listItem);
-      });
+    if (akses_grup) {
+      $('.menu-akun').show();
+
+      if (akses_grup == 1) {
+        $('.menu-admin').show();
+        $('.menu-editor').show();
+      } else if (akses_grup == 2) {
+        $('.menu-editor').show();
+      }
+      // console.log(daftar_akses);
+      if (daftar_akses.length > 1) {
+        $('.menu-ganti-akses').show();
+        $.each(daftar_akses, function(index, item) {
+          var listItem = `<li><a href='#' onclick="setAkses(${item.grup.id})">${item.grup.nama}</a></li>`;
+          $('.daftar-akses').append(listItem);
+        });
+      }
     }
 
     function setAkses(id) {
@@ -148,9 +150,9 @@
           console.log(respose);
         },
       });
-      // localStorage.removeItem('access_token');
-      // localStorage.removeItem('daftar_akses');
-      // localStorage.removeItem('akses_grup');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('daftar_akses');
+      localStorage.removeItem('akses_grup');
       if (pesan)
         alert(pesan);
       window.location.replace(base_url + '/login');

@@ -5,9 +5,10 @@ $.ajaxSetup({
     }
 });
 
-function cekToken() {
+function tokenCek() {
+    var akses_grup = localStorage.getItem('akses_grup');
     $.ajax({
-        url: base_url + '/' + 'api/cek-token',
+        url: base_url + '/' + 'api/token-cek/'+akses_grup,
         method: 'get',
         success: function(response) {
             console.log(response);

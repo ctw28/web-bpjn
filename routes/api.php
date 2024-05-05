@@ -61,7 +61,8 @@ Route::get('/like', [LikeDislikeController::class, 'index']);
 Route::post('/like', [LikeDislikeController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/cek-token', [AuthController::class, 'cekToken']);
+    Route::get('/token-cek/{grup_id}', [AuthController::class, 'tokenCek']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/upload-image-editor', [ImageEditorController::class, 'upload']);

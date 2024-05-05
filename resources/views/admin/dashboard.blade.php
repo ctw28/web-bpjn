@@ -14,6 +14,6 @@
 @section('script')
 <script src="{{ asset('js/token.js') }}"></script>
 <script>
-    cekToken();
+    tokenCek();
 </script>
 @endsection

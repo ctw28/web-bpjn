@@ -1,9 +1,13 @@
 <?php
 
-use Carbon\Carbon;
+use App\Models\AturGrup;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
+
 
 if (!function_exists('is_admin')) {
     function is_admin()
@@ -136,7 +140,7 @@ if (!function_exists('uploadFile')) {
 
         if (!$fileName)
             $fileName = generateUniqueFileName();
-        $fileName .= '.'.$ext;
+        $fileName .= '.' . $ext;
 
         $uploadedFile->move(public_path($storagePath), $fileName);
         $fileFullPath = public_path($storagePath . '/' . $fileName);
@@ -145,13 +149,29 @@ if (!function_exists('uploadFile')) {
         return [
             'path' => $path,
             'jenis' => $tipeFile,
-            'ukuran' => ($ukuranFile/1024),
+            'ukuran' => ($ukuranFile / 1024),
         ];
     }
 }
 
+if (!function_exists('getAkses')) {
+    function getAkses($user_id, $grup_id)
+    {
+        $getAkses = AturGrup::with('grup')
+            ->where('grup_id', $grup_id)
+            ->where('user_id', $user_id)
+            ->get();
+        if ($getAkses->isEmpty()) {
+            return [];
+        }
+        return $getAkses;
+    }
+}
+
+
 if (!function_exists('updateTokenUsed')) {
-    function updateTokenUsed(){
+    function updateTokenUsed()
+    {
         if (auth()->check()) {
             $user = auth()->user();
             $token = $user->tokens->last();
@@ -161,7 +181,7 @@ if (!function_exists('updateTokenUsed')) {
                     'last_used_at' => now(),
                 ])->save();
             }
-        }           
+        }
     }
 }
 
