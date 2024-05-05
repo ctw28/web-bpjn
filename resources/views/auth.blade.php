@@ -55,6 +55,14 @@
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     var goUrl = `{{ url('/dashboard') }}`;
 
+    var akses_grup = localStorage.getItem('akses_grup');
+    if (akses_grup) {
+        toastr.success('sesi login anda masih aktif!', 'login berhasil', {
+            timeOut: 1000
+        });
+        window.location.replace(goUrl);
+    }
+
     $("#myform").validate({
         submitHandler: function(form) {
             $.ajax({
