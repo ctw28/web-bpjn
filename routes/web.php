@@ -22,6 +22,7 @@ Route::post('/set-session', [WebAppController::class, 'setSession'])->name('setS
 Route::get('/session', [WebAppController::class, 'session'])->name('session');
 Route::get('/kotak-saran-web', [WebAppController::class, 'kotakSaranWeb'])->name('kotak-saran-web');
 Route::get('/konten-web/{kategori}', [WebAppController::class, 'kontenWeb'])->name('konten-web');
+Route::get('/galeri-web', [WebAppController::class, 'galeriWeb'])->name('galeri-web');
 Route::get('/file-web/{kategori}', [WebAppController::class, 'fileWeb'])->name('file-web');
 Route::get('/konten-read/{slug}', [WebAppController::class, 'kontenRead'])->name('konten-read');
 Route::get('/file-read/{slug}', [WebAppController::class, 'fileRead'])->name('file-read');
@@ -41,8 +42,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/html-code', [WebAppController::class, 'htmlCode'])->name('html-code');
     Route::get('/slide-show', [WebAppController::class, 'slideShow'])->name('slide-show');
     Route::get('/konten-dashboard', [WebAppController::class, 'kontenDashboard'])->name('konten-dashboard');
+    Route::get('/galeri-dashboard', [WebAppController::class, 'galeriDashboard'])->name('galeri-dashboard');
     Route::get('/file-dashboard', [WebAppController::class, 'fileDashboard'])->name('file-dashboard');
     Route::get('/verifikasi-konten', [WebAppController::class, 'verifikasiKonten'])->name('verifikasi-konten');
     Route::get('/verifikasi-file', [WebAppController::class, 'verifikasiFile'])->name('verifikasi-file');
+    Route::get('/verifikasi-galeri', [WebAppController::class, 'verifikasiGaleri'])->name('verifikasi-galeri');
     Route::get('/verifikasi-komentar', [WebAppController::class, 'verifikasiKomentar'])->name('verifikasi-komentar');
 });

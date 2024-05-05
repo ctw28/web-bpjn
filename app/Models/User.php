@@ -82,6 +82,11 @@ class User extends Authenticatable
         return $this->hasMany(Komentar::class);
     }
 
+    public function galeri()
+    {
+        return $this->hasMany(Galeri::class);
+    }
+
     public function file()
     {
         return $this->hasMany(File::class);

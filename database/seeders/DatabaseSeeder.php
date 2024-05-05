@@ -79,6 +79,7 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 1, 'urut' => 3, 'nama' => 'Struktur Organisasi', 'url' => 'konten-read/struktur-organisasi', 'endpoint' => 'api/konten-read/struktur-organisasi', 'menu_id' => 2],
 
             ['user_id' => 1, 'urut' => 1, 'nama' => 'Berita', 'url' => 'konten-web/berita', 'endpoint' => 'api/list-konten?jenis=berita&is_web=true&publikasi=1', 'menu_id' => 3],
+            ['user_id' => 1, 'urut' => 2, 'nama' => 'Galeri', 'url' => 'galeri-web', 'menu_id' => 3],
             ['user_id' => 1, 'urut' => 2, 'nama' => 'Pengumuman', 'url' => 'konten-web/pengumuman', 'endpoint' => 'api/list-konten?jenis=pengumuman&is_web=true&publikasi=1',  'menu_id' => 3],
             ['user_id' => 1, 'urut' => 3, 'nama' => 'Download', 'url' => 'file-web/download', 'endpoint' => 'api/list-file?jenis=download&is_web=true&publikasi=1', 'menu_id' => 3],
             ['user_id' => 1, 'urut' => 4, 'nama' => 'Peraturan', 'url' => 'file-web/peraturan', 'endpoint' => 'api/list-file?jenis=peraturan&is_web=true&publikasi=1', 'menu_id' => 3],

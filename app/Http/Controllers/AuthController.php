@@ -33,6 +33,11 @@ class AuthController extends Controller
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
+    public function cekToken()
+    {
+        return response()->json(['message' => 'token valid'], 200);
+    }
+
     public function daftarAkses($user_id)
     {
         $getAkses = AturGrup::with('grup')->where('user_id', $user_id)->get();

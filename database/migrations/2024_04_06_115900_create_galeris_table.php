@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJenisKontensTable extends Migration
+class CreateGalerisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateJenisKontensTable extends Migration
      */
     public function up()
     {
-        Schema::create('jenis_kontens', function (Blueprint $table) {
+        Schema::create('galeris', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('slug')->unique();
-            $table->text('deskripsi')->nullable();
-            $table->enum('kategori', ['ARTIKEL', 'FILE'])->default('ARTIKEL');
+            $table->string('judul');
+            $table->dateTime('waktu');
+            $table->string('path');
+            $table->string('jenis_file')->nullable(); //jpg pdf dll
+            $table->float('ukuran')->nullable();
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();
@@ -32,6 +33,6 @@ class CreateJenisKontensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jenis_kontens');
+        Schema::dropIfExists('galeris');
     }
 }

@@ -1,27 +1,29 @@
 <?php
 
-use App\Models\SlideShow;
-use App\Models\LikeDislike;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\GrupController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\KontenController;
-use App\Http\Controllers\WebAppController;
-use App\Http\Controllers\AturGrupController;
 use App\Http\Controllers\HtmlCodeController;
-use App\Http\Controllers\KomentarController;
-use App\Http\Controllers\ShortLinkController;
-use App\Http\Controllers\PublikasiController;
-use App\Http\Controllers\SlideShowController;
-use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\ImageEditorController;
 use App\Http\Controllers\JenisKontenController;
+use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\KontenController;
+use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LikeDislikeController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PengaturanWebController;
+use App\Http\Controllers\PublikasiController;
+use App\Http\Controllers\ShortLinkController;
+use App\Http\Controllers\SlideShowController;
+use App\Http\Controllers\WebAppController;
+use App\Models\LikeDislike;
+use App\Models\SlideShow;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +50,7 @@ Route::get('/get-komentar', [KomentarController::class, 'index']);
 
 Route::get('/list-konten', [KontenController::class, 'index']);
 Route::get('/list-file', [FileController::class, 'index']);
+Route::get('/list-galeri', [GaleriController::class, 'index']);
 Route::get('/update-jumlah-akses-konten/{id}', [KontenController::class, 'updateJumlahAkses']);
 Route::get('/update-jumlah-akses-file/{id}', [FileController::class, 'updateJumlahAkses']);
 
@@ -58,11 +61,13 @@ Route::get('/like', [LikeDislikeController::class, 'index']);
 Route::post('/like', [LikeDislikeController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cek-token', [AuthController::class, 'cekToken']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/upload-image-editor', [ImageEditorController::class, 'upload']);
     Route::resource('konten', KontenController::class);
     Route::resource('file', FileController::class);
+    Route::resource('galeri', GaleriController::class);
     Route::resource('komentar', KomentarController::class);
     Route::resource('short-link', ShortLinkController::class);
     Route::resource('html-code', HtmlCodeController::class);

@@ -24,6 +24,9 @@ class CreatePublikasiTable extends Migration
             $table->foreignId('file_id')->nullable()->unique();
             $table->foreign('file_id')->references('id')->on('files')->restrictOnDelete();
 
+            $table->foreignId('galeri_id')->nullable()->unique();
+            $table->foreign('galeri_id')->references('id')->on('galeris')->restrictOnDelete();
+
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->timestamps();

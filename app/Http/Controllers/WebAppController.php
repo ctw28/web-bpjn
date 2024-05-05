@@ -38,10 +38,6 @@ class WebAppController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
-    public function listKonten()
-    {
-    }
-
     public function session()
     {
         dd(auth()->user());
@@ -49,64 +45,88 @@ class WebAppController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        return view('admin.dashboard');
     }
 
     public function jenisKonten()
     {
-        return view('jenis_konten');
+        return view('admin.jenis_konten');
     }
 
     public function grup()
     {
-        return view('grup');
+        return view('admin.grup');
     }
 
     public function pengaturanWeb()
     {
-        return view('pengaturan_web');
+        return view('admin.pengaturan_web');
     }
 
     public function akun()
     {
-        return view('akun');
+        return view('admin.akun');
     }
 
     public function menu()
     {
-        return view('menu');
+        return view('admin.menu');
     }
 
     public function kontenDashboard()
     {
-        return view('konten_dashboard');
+        return view('admin.konten_dashboard');
+    }
+
+    public function galeriDashboard()
+    {
+        return view('admin.galeri_dashboard');
     }
 
     public function fileDashboard()
     {
-        return view('file_dashboard');
+        return view('admin.file_dashboard');
     }
 
     public function verifikasiKonten()
     {
-        return view('verifikasi_konten');
+        return view('admin.verifikasi_konten');
+    }
+
+    public function verifikasiGaleri()
+    {
+        return view('admin.verifikasi_galeri');
     }
 
     public function verifikasiFile()
     {
-        return view('verifikasi_file');
+        return view('admin.verifikasi_file');
     }
 
     public function verifikasiKomentar()
     {
-        return view('verifikasi_komentar');
+        return view('admin.verifikasi_komentar');
     }
 
     public function htmlCode()
     {
-        return view('html_code');
+        return view('admin.html_code');
     }
 
+    public function slideShow()
+    {
+        return view('admin.slide_show');
+    }
+
+    public function kotakSaran()
+    {
+        return view('admin.kotak_saran_dashboard');
+    }
+
+    public function shortLink()
+    {
+        return view('admin.short_link');
+    }
     public function login()
     {
         return view('auth');
@@ -117,29 +137,19 @@ class WebAppController extends Controller
         return view('website');
     }
 
-    public function slideShow()
-    {
-        return view('slide_show');
-    }
-
-    public function kotakSaran()
-    {
-        return view('kotak_saran_dashboard');
-    }
-
     public function kotakSaranWeb()
     {
         return view('kotak_saran_web');
     }
 
-    public function shortLink()
-    {
-        return view('short_link');
-    }
-
     public function kontenWeb($kategori)
     {
         return view('konten_web', ['kategori' => $kategori]);
+    }
+
+    public function galeriWeb()
+    {
+        return view('galeri_web');
     }
 
     public function fileWeb($kategori)
