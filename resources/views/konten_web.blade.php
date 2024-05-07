@@ -1,33 +1,33 @@
 @extends('template_website')
 
 @section('head')
-    <title>Daftar {{ $kategori }}</title>
+<title>Daftar {{ $kategori }}</title>
 @endsection
 
 @section('container')
 
-    <h1>Daftar {{ $kategori }}</h1>
+<h1>Daftar {{ $kategori }}</h1>
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Artikel Web</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody id="data-list">
-                <!-- Data pesan akan dimuat di sini -->
-            </tbody>
-        </table>
-    </div>
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center" id="pagination">
-        </ul>
-    </nav>
-    
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Artikel Web</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="data-list">
+            <!-- Data pesan akan dimuat di sini -->
+        </tbody>
+    </table>
+</div>
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center" id="pagination">
+    </ul>
+</nav>
+
 @endsection
 
 @section('script')
@@ -35,49 +35,49 @@
 <script src="{{ asset('js/pagination.js') }}"></script>
 
 <script>
+    var vApiUrl = base_url;
+    var vDataGrup = [];
+    var vKategori = '{{"konten-web/".$kategori}}';
+    var endPointList = base_url + '{{"/api/list-konten?jenis=".$kategori}}';
 
-var vApiUrl=base_url;
-var vDataGrup=[];
-var vKategori='{{ "konten-web/".$kategori }}';
-
-$(document).ready(function() {
-    // loadData();
-    getMenu();
-
-    $('.item-paging').on('click', function() {
-        vPaging=$(this).data('nilai');
+    $(document).ready(function() {
         loadData();
-    })
+        // getMenu();
 
-    function getMenu(){
-        $.ajax({
-            url: base_url+'/api/get-menu?search='+vKategori+'&showall=true',
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                vApiUrl=vApiUrl+'/'+response[0].endpoint;
-                loadData();
-            },
-            error: function() {
-                alert(jenis+' tidak ditemukan!');
-            }
-        });
-    }      
+        $('.item-paging').on('click', function() {
+            vPaging = $(this).data('nilai');
+            loadData();
+        })
 
-    function loadData(page = 1, search = '') {
-        $.ajax({
-            url: vApiUrl+'&page=' + page + '&search=' + search,
-            method: 'GET',
-            success: function(response) {
-                var dataList = $('#data-list');
-                var pagination = $('#pagination');
-                dataList.empty();
+        // function getMenu() {
+        //     $.ajax({
+        //         url: base_url + '/api/get-menu?search=' + vKategori + '&showall=true',
+        //         method: 'GET',
+        //         dataType: 'json',
+        //         success: function(response) {
+        //             vApiUrl = vApiUrl + '/' + endPointList;
+        //             loadData();
+        //         },
+        //         error: function() {
+        //             alert(jenis + ' tidak ditemukan!');
+        //         }
+        //     });
+        // }
 
-                $.each(response.data, function(index, dt) {
-                    var hakakses='';
-                    var thumbnail=(dt.thumbnail!==null)?dt.thumbnail:"images/thumbnail.jpg";                    
-                    var urlread=base_url+'/konten-read/'+dt.slug;
-                    dataList.append(`
+        function loadData(page = 1, search = '') {
+            $.ajax({
+                url: endPointList + '&is_web=true&publikasi=1&page=' + page + '&search=' + search,
+                method: 'GET',
+                success: function(response) {
+                    var dataList = $('#data-list');
+                    var pagination = $('#pagination');
+                    dataList.empty();
+
+                    $.each(response.data, function(index, dt) {
+                        var hakakses = '';
+                        var thumbnail = (dt.thumbnail !== null) ? dt.thumbnail : "images/thumbnail.jpg";
+                        var urlread = base_url + '/konten-read/' + dt.slug;
+                        dataList.append(`
                         <tr data-id="${dt.id}"> 
                             <td></td> 
                             <td>
@@ -98,32 +98,31 @@ $(document).ready(function() {
                                 </div>
                             </td> 
                         </tr>`);
-                });
+                    });
 
-                renderPagination(response, pagination);
+                    renderPagination(response, pagination);
+                }
+            });
+        }
+
+        // Handle page change
+        $(document).on('click', '.page-link', function() {
+            var page = $(this).data('page');
+            var search = $('#search-input').val();
+            // alert(page);
+            loadData(page, search);
+        });
+
+        // Handle search form submission
+        $('.cari-data').click(function() {
+            var search = $("#search-input").val();
+            if (search.length > 3) {
+                loadData(1, search);
+            } else if (search.length === 0) {
+                loadData(1, '');
             }
         });
-    }
 
-    // Handle page change
-    $(document).on('click', '.page-link', function() {
-        var page = $(this).data('page');
-        var search = $('#search-input').val();
-        // alert(page);
-        loadData(page, search);
     });
-
-    // Handle search form submission
-    $('.cari-data').click(function(){
-        var search = $("#search-input").val();
-        if (search.length > 3) {
-            loadData(1, search);
-        } else if (search.length === 0) {
-            loadData(1, '');
-        }
-    });
-
-});
-
 </script>
 @endsection

@@ -1,35 +1,35 @@
 @extends('template_website')
 
 @section('head')
-    <title>File {{ $kategori }}</title>
+<title>File {{ $kategori }}</title>
 @endsection
 
 @section('container')
 
-    <h1>File {{ $kategori }}</h1>
+<h1>File {{ $kategori }}</h1>
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">File Dokumen Web</th>
-                    <th scope="col">Akun</th>
-                    <th scope="col">Statistik</th>
-                    <th scope="col">Waktu</th>
-                </tr>
-            </thead>
-            <tbody id="data-list">
-                <!-- Data pesan akan dimuat di sini -->
-            </tbody>
-        </table>
-    </div>
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center" id="pagination">
-        </ul>
-    </nav>
-    
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">File Dokumen Web</th>
+                <th scope="col">Akun</th>
+                <th scope="col">Statistik</th>
+                <th scope="col">Waktu</th>
+            </tr>
+        </thead>
+        <tbody id="data-list">
+            <!-- Data pesan akan dimuat di sini -->
+        </tbody>
+    </table>
+</div>
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center" id="pagination">
+    </ul>
+</nav>
+
 @endsection
 
 @section('script')
@@ -38,51 +38,51 @@
 <script src="{{ asset('js/pagination.js') }}"></script>
 
 <script>
+    var vApiUrl = base_url;
+    var vDataGrup = [];
+    var vKategori = '{{ "file-web/".$kategori }}';
+    var endPointList = base_url + '{{"/api/list-file?jenis=".$kategori}}';
 
-var vApiUrl=base_url;
-var vDataGrup=[];
-var vKategori='{{ "file-web/".$kategori }}';
-
-$(document).ready(function() {
-    // loadData();
-    getMenu();
-
-    $('.item-paging').on('click', function() {
-        vPaging=$(this).data('nilai');
+    $(document).ready(function() {
         loadData();
-    })
+        // getMenu();
 
-    function getMenu(){
-        $.ajax({
-            url: base_url+'/api/get-menu?search='+vKategori+'&showall=true',
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                vApiUrl=vApiUrl+'/'+response[0].endpoint;
-                loadData();
-                // console.log(response);
-            },
-            error: function() {
-                alert(jenis+' tidak ditemukan!');
-            }
-        });
-    }      
+        $('.item-paging').on('click', function() {
+            vPaging = $(this).data('nilai');
+            loadData();
+        })
 
-    function loadData(page = 1, search = '') {
-        $.ajax({
-            url: vApiUrl+'&page=' + page + '&search=' + search,
-            method: 'GET',
-            success: function(response) {
-                var dataList = $('#data-list');
-                var pagination = $('#pagination');
-                dataList.empty();
+        // function getMenu() {
+        //     $.ajax({
+        //         url: base_url + '/api/get-menu?search=' + vKategori + '&showall=true',
+        //         method: 'GET',
+        //         dataType: 'json',
+        //         success: function(response) {
+        //             vApiUrl = vApiUrl + '/' + response[0].endpoint;
+        //             loadData();
+        //             // console.log(response);
+        //         },
+        //         error: function() {
+        //             alert(jenis + ' tidak ditemukan!');
+        //         }
+        //     });
+        // }
 
-                $.each(response.data, function(index, dt) {
-                    var linkFile = base_url+'/'+dt.path;
-                    var link = base_url+'/file-read/'+dt.slug;
+        function loadData(page = 1, search = '') {
+            $.ajax({
+                url: endPointList + '&is_web=true&publikasi=1&page=' + page + '&search=' + search,
+                method: 'GET',
+                success: function(response) {
+                    var dataList = $('#data-list');
+                    var pagination = $('#pagination');
+                    dataList.empty();
 
-                    var hakakses='';
-                                                
+                    $.each(response.data, function(index, dt) {
+                        var linkFile = base_url + '/' + dt.path;
+                        var link = base_url + '/file-read/' + dt.slug;
+
+                        var hakakses = '';
+
                         dataList.append(`
                             <tr data-id="${dt.id}"> 
                                 <td>${dt.nomor}</td> 
@@ -105,32 +105,31 @@ $(document).ready(function() {
                     });
 
                     renderPagination(response, pagination);
+                }
+            });
+        }
+
+        // Handle page change
+        $(document).on('click', '.page-link', function() {
+            var page = $(this).data('page');
+            var search = $('#search-input').val();
+            loadData(page, search);
+        });
+
+        $('#refresh').on('click', function(e) {
+            loadData();
+        });
+
+        // Handle search form submission
+        $('.cari-data').click(function() {
+            var search = $("#search-input").val();
+            if (search.length > 3) {
+                loadData(1, search);
+            } else if (search.length === 0) {
+                loadData(1, '');
             }
         });
-    }
 
-    // Handle page change
-    $(document).on('click', '.page-link', function() {
-        var page = $(this).data('page');
-        var search = $('#search-input').val();
-        loadData(page, search);
     });
-
-    $('#refresh').on('click', function(e) {
-        loadData();
-    });
-
-    // Handle search form submission
-    $('.cari-data').click(function(){
-        var search = $("#search-input").val();
-        if (search.length > 3) {
-            loadData(1, search);
-        } else if (search.length === 0) {
-            loadData(1, '');
-        }
-    });
-
-});
-
 </script>
 @endsection
