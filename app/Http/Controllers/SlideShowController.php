@@ -63,7 +63,7 @@ class SlideShowController extends Controller
 
     public function store(SlideShowRequest $request)
     {
-        $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
+        $storagePath = 'slideshows/' . date('Y');
         // $pathUpload = uploadFile($request, 'file', $storagePath);
         // if ($pathUpload) {
         //     $request['path'] = $pathUpload;
@@ -107,7 +107,7 @@ class SlideShowController extends Controller
                 FileFacade::delete($dataQuery->path);
             }
 
-            // $storagePath = 'slideshows/' . date('Y') . '/' . date('m');
+            $storagePath = 'slideshows/' . date('Y');
             // $pathUpload = uploadFile($request, 'file', $storagePath);
             // if ($pathUpload) {
             //     $request['path'] = $pathUpload;
@@ -121,7 +121,6 @@ class SlideShowController extends Controller
             } else {
                 return response()->json(['message' => 'Gagal mengunggah file'], 500);
             }
-            
         }
 
         $dataQuery->update($request->all());
