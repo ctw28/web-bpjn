@@ -227,15 +227,14 @@
                                     </a>
                                 </div>
                                 <div class="post-body">
+                                <div class="latest-post-meta">
+                                    <span class="post-item-date">
+                                        <i class="fa fa-clock"></i> ${data.waktu} &nbsp
+                                    </span>
+                                </div>
                                     <h4 class="post-title">
                                         <a href="${link}" class="d-inline-block">${data.judul}</a>
                                     </h4>
-                                    <div class="latest-post-meta">
-                                        <span class="post-item-date">
-                                            <i class="fa fa-clock-o"></i> ${data.waktu}
-                                            <i class="fa fa-eye-o"></i> ${data.komentar_count}
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
                         </div>`

@@ -4,12 +4,12 @@
 @section('head')
 <style>
     .bg-breadcrumb {
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../frontend/assets/img/banner-bpjn-2.png);
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/web/assets/img/banner-bpjn-2.png);
     }
 </style>
 @endsection
 @section('content')
-<div id="banner-area" class="banner-area" style="background-image:url(/web/images/banner/banner1.jpg)">
+<div id="banner-area" class="banner-area" style="background-image:url(/web/banner-1.png)">
     <div class="banner-text">
         <div class="container">
             <div class="row">
@@ -47,10 +47,10 @@
                                     <i class="far fa-user"></i><a href="#"> Admin</a>
                                 </span>
                                 <span class="post-cat">
-                                    <i class="far fa-folder-open"></i><a href="#"> <span id="jenis"></span></a>
+                                    <i class="far fa-eye"></i><a href="#"> <span id="total-lihat"></span></a>
                                 </span>
-                                <span class="post-meta-date"><i class="far fa-calendar"></i> June 14, 2016</span>
-                                <span class="post-comment"><i class="far fa-comment"></i> <span id="komen"></span><a href="#" class="comments-link">Comments</a></span>
+                                <span class="post-meta-date"><i class="far fa-calendar"></i> <span id="tanggal"></span></span>
+                                <span class="post-comment"><i class="far fa-comment"></i> <span id="komen"></span></span>
                             </div>
                             <h2 class="entry-title" id="judul">
 
@@ -80,7 +80,7 @@
 
                 <!-- Post comment start -->
                 <div id="comments" class="comments-area">
-                    <h3 class="comments-heading">07 Komentar</h3>
+                    <h3 class="comments-heading"> Komentar</h3>
 
                     <ul class="comments-list">
 
@@ -94,7 +94,10 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="message"><textarea class="form-control required-field" id="message" placeholder="Your Comment" rows="10" required></textarea></label>
+                                    <label for="message">
+                                        <textarea class="form-control required-field" width="100%" id="message" placeholder="Your Comment" rows="10" required>
+
+                                        </textarea></label>
                                 </div>
                             </div><!-- Col 12 end -->
 
@@ -149,6 +152,9 @@
 @section('scripts')
 <script>
     var slug = '{{ $slug }}';
+    var jumlah_akses;
+    var konten_id;
+
     showKonten()
     async function showKonten() {
         let url = `${base_url}/api/list-konten?showall=1&is_web=1&slug=${slug}`
@@ -161,11 +167,19 @@
         document.querySelector('#gambar').src = thumbnail
         document.querySelector('#gambar').setAttribute('width', '100%')
         document.querySelector('#judul').innerText = data.judul
-        document.querySelector('#jenis').innerText = data.jeniskonten.nama
         document.querySelector('#kategori').innerText = data.jeniskonten.nama
         document.querySelector('#konten-isi').innerHTML = data.isi
+        document.querySelector('#tanggal').innerText = data.waktu
+        document.querySelector('#komen').innerText = data.komentar_count
         // document.querySelector('#konten-isi').innerHTML = data.isi
+        konten_id = data.id
+        jumlah_akses = data.jumlah_akses
+
         showLainnya(data.jeniskonten.slug)
+        updateJumlahAkses();
+        loadKomentar();
+
+
         // document.getElementById('aplikasi-terkait').innerHTML = response[0].code
 
     }
@@ -199,6 +213,41 @@
         })
         document.querySelector('#lainnya-list').innerHTML = ''
         document.querySelector('#lainnya-list').innerHTML = contents
+    }
+    // updateJumlahAkses()
+
+    function updateJumlahAkses() {
+        $.ajax({
+            url: base_url + '/api/update-jumlah-akses-konten/' + konten_id,
+            method: 'GET',
+            success: function(response) {
+                $('#total-lihat').html(response.jumlah_akses);
+                // console.log(response);
+            }
+        });
+    }
+
+    function loadKomentar(page = 1) {
+        $.ajax({
+            url: base_url + '/' + 'api/get-komentar?konten_id=' + konten_id + '&page=' + page + '&publikasi=1',
+            method: 'GET',
+            success: function(response) {
+                var dataList = $('#data-list');
+                var pagination = $('#pagination');
+                dataList.empty();
+                $.each(response.data, function(index, dt) {
+                    dataList.append(`
+                        <tr> 
+                            <td>
+                                <h5><i class="bi bi-person"></i> ${dt.nama}</h5>
+                                <div class='font-12'>${dt.updated_at_format}</div>
+                                <p>${dt.komentar}</p>
+                            </td> 
+                        </tr>`);
+                });
+                renderPagination(response, pagination);
+            }
+        });
     }
 </script>
 @endsection
