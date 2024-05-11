@@ -95,7 +95,7 @@
                     $.each(response.data, function(index, dt) {
                         var hakakses = '';
                         var thumbnail = (dt.thumbnail !== null) ? dt.thumbnail : "images/thumbnail.jpg";
-                        var urlread = base_url + '/konten-read/' + dt.slug;
+                        var urlread = `${base_url}/konten/${dt.jeniskonten.slug}/${dt.slug}`
                         dataList.append(`
                         <tr data-id="${dt.id}"> 
                             <td>
